@@ -1309,9 +1309,9 @@ MonoBehaviour:
   playerID: 0
   CharacterSheetScript: {fileID: 99353478}
   SkateMode: 0
-  MaxRollForce: 5
-  MaxSkateForce: 10
-  OllieForce: 300
+  MaxRollForce: 0
+  MaxSkateForce: 0
+  OllieForce: 0
   isGrounded: 0
   GroundChecker: {fileID: 429724758}
   platformLayerMask:
@@ -2816,7 +2816,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 253456945}
   m_LocalRotation: {x: 0.06975647, y: 0, z: 0, w: 0.9975641}
-  m_LocalPosition: {x: 0, y: 3, z: -10}
+  m_LocalPosition: {x: 0, y: 1.5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 99353473}
@@ -2887,8 +2887,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CameraID: 0
   Target: {fileID: 99353473}
-  SmoothSpeed: 10
-  Offset: {x: 0, y: 3, z: -10}
+  SmoothSpeed: 14
+  Offset: {x: 0, y: 1.5, z: -10}
 --- !u!1 &257179724
 GameObject:
   m_ObjectHideFlags: 0

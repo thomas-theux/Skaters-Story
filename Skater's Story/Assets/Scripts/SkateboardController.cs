@@ -81,83 +81,60 @@ public class SkateboardController : MonoBehaviour {
 
         ///////////////////////////////////////////////////////////////////////////////////////
 
-        // 0 = Stop
-        if (SkateMode == 0) {
-            if (dPadRight) {
-                // Start to ROLL
-                SkateMode = 1;
-                rb.velocity = transform.right * MaxRollForce;
-            }
-
-            if (XButtonUp) {
-                // JUMP while skating
-                if (isGrounded) {
-                    ApplyOllieForce();
-                }
-            }
-
-            if (XButtonDown) {
-                // JUMP while standing still
-                EnterSkateMode();
-            }
-        }
-
-        // 1 = Roll
-        if (SkateMode == 1) {
-            ApplyPushForce(MaxRollForce);
-
-            if (dPadLeft) {
-                // Decelerating until standing still
-                ResetValuesWhenStopping();
-            }
-
-            if (XButtonUp) {
-                // JUMP while rolling
-                if (isGrounded) {
-                    ApplyOllieForce();
-                }
-            }
-
-            if (XButtonDown) {
-                // Go into SKATE mode
-                EnterSkateMode();
-            }
-        }
-
-        // 2 = Skate
-        if (SkateMode == 2) {
-            ApplyPushForce(MaxSkateForce);
-
-            if (!XButtonDown) {
-                if (dPadLeft) {
-                    // Decelerating until standing still
-                    ResetValuesWhenStopping();
-                }
-            }
-
-            if (XButtonUp) {
-                // JUMP while skating
-                if (isGrounded) {
-                    ApplyOllieForce();
-                }
-            }
-        }
-
-        // 3 = Air
-        if (SkateMode == 3) {
-            // Can do tricks
+        // Handle jumping
+        if (XButtonUp) {
             if (isGrounded) {
-                SkateMode = savedSkateMode;
-
-                // Check for bails
+                ApplyOllieForce();
             }
         }
 
+        ///////////////////////////////////////////////////////////////////////////////////////
+
+        // Set skate mode to AIR whenever the player is not grounded
         if (!isGrounded) {
             if (SkateMode != 3) {
                 savedSkateMode = SkateMode;
                 SkateMode = 3;
             }
+        } else {
+            if (SkateMode == 3) {
+                SkateMode = savedSkateMode;
+
+                // Check for bails
+            }
+        }
+    }
+
+
+    private void FixedUpdate() {
+        if (dPadRight) {
+            if (SkateMode == 0) {
+                SkateMode = 1;
+                rb.velocity = transform.right * MaxRollForce;
+            }
+        }
+
+        if (dPadLeft) {
+            if (SkateMode == 1 || SkateMode == 2) {
+                if (!XButtonDown) {
+                    ResetValuesWhenStopping();
+                }
+            }
+        }
+
+        if (XButtonDown) {
+            if (SkateMode == 0 || SkateMode == 1) {
+                EnterSkateMode();
+            }
+        }
+
+        switch (SkateMode) {
+            case 1:
+                ApplyPushForce(MaxRollForce);
+                break;
+            case 2:
+                ApplyPushForce(MaxSkateForce);
+                break;
         }
     }
 
@@ -188,6 +165,7 @@ public class SkateboardController : MonoBehaviour {
 
 
     private void ResetValuesWhenStopping() {
+        savedSkateMode = 0;
         SkateMode = 0;
         AppliedForce = 0;
         startedDelay = false;
