@@ -146,7 +146,7 @@ public class SkateboardController : MonoBehaviour {
         dPadLeft = player.GetButton("DPad Left");
         dPadRight = player.GetButton("DPad Right");
 
-        DEVRESET = player.GetButtonUp("Reset (DEV)");
+        DEVRESET = player.GetButtonUp("Circle");
     }
 
 
