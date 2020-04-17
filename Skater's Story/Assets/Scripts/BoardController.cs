@@ -12,6 +12,7 @@ public class BoardController : MonoBehaviour {
     private Rigidbody2D rb;
 
     public CharacterSheet CharacterSheetScript;
+    public CameraController CameraControllerScript;
 
     // 0 = stop; 1 = increasing; 2 = skate; 3 = air; 4 = decreasing
     public int SkateMode = 0;
@@ -19,18 +20,22 @@ public class BoardController : MonoBehaviour {
     private float MinBoardSpeed = 0;             // The min speed of the board
     private float MaxBoardSpeed = 0;             // The max speed when holding the X button
     private float OllieForce = 0f;               // How high the skater can jump
-    private float appliedForce = 0.0f;          // Just an interims variable to calculate
-    private float increaseForce = 0.3f;         // How fast the skateboard is accelerating until it reaches max speed
-    private float decreaseForce = 0.01f;        // How fast the skateboard is decelerating until it reaches 0 speed
-    private float appliedForceTolerance = 0.2f; // Tolerance for board speed
-    private float speedIncreaseVar = 20.0f;     // This determines how fast the speed of the board increases until it reaches full speed –> lower value = faster increase
+    private float appliedForce = 0.0f;           // Just an interims variable to calculate
+    private float increaseForce = 0.3f;          // How fast the skateboard is accelerating until it reaches max speed
+    private float decreaseForce = 0.01f;         // How fast the skateboard is decelerating until it reaches 0 speed
+    private float appliedForceTolerance = 0.2f;  // Tolerance for board speed
+    private float speedIncreaseVar = 20.0f;      // This determines how fast the speed of the board increases until it reaches full speed –> lower value = faster increase
 
-    private float drag = 0.5f;
+    // private float drag = 0.5f;
 
     public int direction = 1;
 
-    private float ollieForceMin = 100.0f;
-    private float ollieForceMax = 500.0f;
+    // Camera zooming out and smoothing values
+    private float fovSmoothing = 1.2f;            // The higher this value, the faster the smoothing
+    private float distanceMultiplier = 3.0f;      // The higher this value, the more zoomed out
+
+    // private float ollieForceMin = 100.0f;
+    // private float ollieForceMax = 500.0f;
 
     private float minMultiplier = 0.5f;
     private float maxMultiplier = 1.0f;
@@ -39,7 +44,7 @@ public class BoardController : MonoBehaviour {
     public bool isGrounded = false;
     public Transform GroundChecker;
     private float GroundDistance = 0.1f;
-    [SerializeField] private LayerMask platformLayerMask;
+    [SerializeField] public LayerMask platformLayerMask;
 
     // Variables for the delays for entering and exiting the skate mode 
     private bool startedEnterDelay = false;
@@ -152,6 +157,8 @@ public class BoardController : MonoBehaviour {
                 if (XButtonDown) { EnterSkateModeDelay(); }
                 break;
         }
+
+        CameraZoom();
     }
 
 
@@ -210,9 +217,13 @@ public class BoardController : MonoBehaviour {
     private void ApplyPushForce(float pushForce) {
         // rb.velocity = new Vector2(pushForce * direction, rb.velocity.y);
 
-        Vector3 newForce = transform.right * pushForce * direction;
-        newForce.y = rb.velocity.y;
-        rb.velocity = newForce;
+        // This if function only applies force when the skateboard is slower than the max speed
+        // otherwise it would limit the speed to the max even if it's rolling down a slope
+        if (currentBoardSpeed < MaxBoardSpeed) {
+            Vector3 newForce = transform.right * pushForce * direction;
+            newForce.y = rb.velocity.y;
+            rb.velocity = newForce;
+        }
     }
 
 
@@ -281,6 +292,19 @@ public class BoardController : MonoBehaviour {
         SkateMode = 0;
 
         appliedForce = 0;
+    }
+
+
+    private void CameraZoom() {
+        Vector2 direction = new Vector2(0, -1);
+        RaycastHit2D hit = Physics2D.Raycast(this.gameObject.transform.position, direction, Mathf.Infinity, platformLayerMask);
+
+        if (hit.collider != null) {
+            float desiredFOV = hit.distance * distanceMultiplier;
+            float smoothedFOV = Mathf.Lerp(CameraControllerScript.FieldOfView, desiredFOV, fovSmoothing * Time.fixedDeltaTime);
+
+            CameraControllerScript.FieldOfView = smoothedFOV;
+        }
     }
 
 
