@@ -10,6 +10,7 @@ public class BoardController : MonoBehaviour {
 
     private Player player;
     private Rigidbody2D rb;
+    public Animator animator;
 
     public CharacterSheet CharacterSheetScript;
     public CameraController CameraControllerScript;
@@ -61,6 +62,7 @@ public class BoardController : MonoBehaviour {
     // REWIRED
     private bool XButtonDown = false;
     private bool XButtonUp = false;
+    private bool SquareButton = false;
     private bool TriangleButton = false;
     private bool CircleButton = false;
     private bool dPadLeft = false;
@@ -127,12 +129,22 @@ public class BoardController : MonoBehaviour {
             }
         }
 
-        // Remove the drag whenever the player is not in the decreasing mode
-        if (SkateMode != 4) {
-            if (rb.drag > 0) {
-                rb.drag = 0f;
+        ///////////////////////////////////////////////////////////////////////////////////////
+
+        if (!isGrounded) {
+            if (SquareButton) {
+                animator.SetBool("Pop Shove-It", true);
             }
         }
+
+        ///////////////////////////////////////////////////////////////////////////////////////
+
+        // Remove the drag whenever the player is not in the decreasing mode
+        // if (SkateMode != 4) {
+        //     if (rb.drag > 0) {
+        //         rb.drag = 0f;
+        //     }
+        // }
     }
 
 
@@ -166,6 +178,7 @@ public class BoardController : MonoBehaviour {
         XButtonDown = player.GetButton("X");
         XButtonUp = player.GetButtonUp("X");
 
+        SquareButton = player.GetButtonUp("Square");
         TriangleButton = player.GetButtonUp("Triangle");
         CircleButton = player.GetButtonUp("Circle");
 
@@ -318,7 +331,7 @@ public class BoardController : MonoBehaviour {
         rb.velocity = Vector2.zero;
         rb.angularVelocity = 0;
 
-        this.transform.position = new Vector3(0, 0.2f, 0);
+        this.transform.position = new Vector3(0, 1.0f, 0);
         this.transform.rotation = Quaternion.Euler(Vector3.zero);
     }
 
@@ -339,8 +352,13 @@ public class BoardController : MonoBehaviour {
             respawnPosX = this.transform.position.x + 2.0f;
         }
 
-        this.transform.position = new Vector3(respawnPosX, 0, 0);
+        this.transform.position = new Vector3(respawnPosX, 1.0f, 0);
         this.transform.rotation = Quaternion.Euler(Vector3.zero);
+    }
+    
+
+    public void AnimationEnded() {
+        animator.SetBool("Pop Shove-It", false);
     }
 
 }
