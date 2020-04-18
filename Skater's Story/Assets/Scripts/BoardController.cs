@@ -15,7 +15,7 @@ public class BoardController : MonoBehaviour {
     public CharacterSheet CharacterSheetScript;
     public CameraController CameraControllerScript;
 
-    // 0 = stop; 1 = increasing; 2 = skate; 3 = air; 4 = decreasing
+    // 0 = stop; 1 = increasing; 2 = skate; 3 = air; 4 = decreasing; 5 = slowing down
     public int SkateMode = 0;
 
     private float MinBoardSpeed = 0;             // The min speed of the board
@@ -24,6 +24,7 @@ public class BoardController : MonoBehaviour {
     private float appliedForce = 0.0f;           // Just an interims variable to calculate
     private float increaseForce = 0.3f;          // How fast the skateboard is accelerating until it reaches max speed
     private float decreaseForce = 0.01f;         // How fast the skateboard is decelerating until it reaches 0 speed
+    private float slowDownForce = 0.2f;          // How fast the skateboard is decelerating when slowing down (dpad down)
     private float appliedForceTolerance = 0.2f;  // Tolerance for board speed
     private float speedIncreaseVar = 20.0f;      // This determines how fast the speed of the board increases until it reaches full speed –> lower value = faster increase
 
@@ -65,8 +66,10 @@ public class BoardController : MonoBehaviour {
     private bool SquareButton = false;
     private bool TriangleButton = false;
     private bool CircleButton = false;
+
     private bool dPadLeft = false;
     private bool dPadRight = false;
+    private bool dPadDown = false;
 
     // DEV variables
     public TMP_Text BoardSpeedText;
@@ -164,10 +167,27 @@ public class BoardController : MonoBehaviour {
                 // if (isGrounded) { ExitSkateModeDelay(); }
                 // break;
             case 4:
-                DecreaseSpeed();
+                DecreaseSpeed(decreaseForce);
                 // if (XButtonDown) { IncreaseSpeed(); }
                 if (XButtonDown) { EnterSkateModeDelay(); }
                 break;
+            case 5:
+                DecreaseSpeed(slowDownForce);
+                break;
+        }
+
+        // Slowing down the player when pressing the DPad Down button
+        if (SkateMode > 0) {
+            if (dPadDown) {
+                if (SkateMode != 5) {
+                    savedSkateMode = SkateMode;
+                }
+                SkateMode = 5;
+            } else {
+                if (SkateMode == 5) {
+                    SkateMode = 1;
+                }
+            }
         }
 
         CameraZoom();
@@ -184,6 +204,7 @@ public class BoardController : MonoBehaviour {
 
         dPadLeft = player.GetButton("DPad Left");
         dPadRight = player.GetButton("DPad Right");
+        dPadDown = player.GetButton("DPad Down");
     }
 
 
@@ -277,19 +298,18 @@ public class BoardController : MonoBehaviour {
         ApplyPushForce(MaxBoardSpeed);
 
         if (delayCounter >= delayThreshold) {
+            print(SkateMode);
             SkateMode = 4;
+            print(SkateMode);
             startedExitDelay = false;
         }
     }
 
 
-    private void DecreaseSpeed() {
-        if (rb.velocity.x > 0) {
-            // if (rb.drag < drag) {
-            //     rb.drag = drag;
-            // }
-
-            appliedForce = currentBoardSpeed - decreaseForce;
+    private void DecreaseSpeed(float decreasingForce) {
+        // if (Mathf.Abs(rb.velocity.x) > 0) {
+        if (appliedForce > 0) {
+            appliedForce = currentBoardSpeed - decreasingForce;
             ApplyPushForce(appliedForce);
         } else {
             ResetOnStop();
