@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using Rewired;
 
 public class SkateboardController : MonoBehaviour {
@@ -8,50 +9,69 @@ public class SkateboardController : MonoBehaviour {
     public int playerID = 0;
 
     private Player player;
-    private Rigidbody2D rb;
+    private Rigidbody rb;
+    public Animator animator;
 
     public CharacterSheet CharacterSheetScript;
+    public CameraController CameraControllerScript;
 
-    // 0 = stop; 1 = roll; 2 = skate; 3 = air;
+    // 0 = stop; 1 = increasing; 2 = skate; 3 = air; 4 = decreasing; 5 = slowing down
     public int SkateMode = 0;
 
-    // Force variables for roll, skate, and ollie
-    public float MaxRollForce;               // The max speed when just rolling (without X)
-    public float MaxSkateForce;              // The max speed when holding the X button
-    public float OllieForce = 300.0f;        // How high the skater can jump
-    private float AppliedForce = 0.0f;       // Just an interims variable to calculate
-    private float IncreaseForce = 0.1f;      // How fast the skateboard is accelerating until it reaches max speed
+    private float MinBoardSpeed = 0;             // The min speed of the board
+    private float MaxBoardSpeed = 0;             // The max speed when holding the X button
+    private float OllieForce = 0f;               // How high the skater can jump
+    private float appliedForce = 0.0f;           // Just an interims variable to calculate
+    private float increaseForce = 0.3f;          // How fast the skateboard is accelerating until it reaches max speed
+    private float decreaseForce = 0.01f;         // How fast the skateboard is decelerating until it reaches 0 speed
+    private float slowDownForce = 0.2f;          // How fast the skateboard is decelerating when slowing down (dpad down)
+    private float appliedForceTolerance = 0.2f;  // Tolerance for board speed
+    private float speedIncreaseVar = 20.0f;      // This determines how fast the speed of the board increases until it reaches full speed –> lower value = faster increase
 
-    private float ollieForceMin = 100.0f;
-    private float ollieForceMax = 500.0f;
+    public int direction = 1;
+
+    // Camera zooming out and smoothing values
+    private float fovSmoothing = 1.2f;            // The higher this value, the faster the smoothing
+    private float distanceMultiplier = 3.0f;      // The higher this value, the more zoomed out
+
+    private float minMultiplier = 0.5f;
+    private float maxMultiplier = 1.0f;
 
     // Variables for ground checking
     public bool isGrounded = false;
     public Transform GroundChecker;
     private float GroundDistance = 0.1f;
-    [SerializeField] private LayerMask platformLayerMask;
+    [SerializeField] public LayerMask platformLayerMask;
 
-    private bool startedDelay = false;
-    private float enterDelay = 0.0f;
-    private float enterIncrease = 0.04f;
-    private float enterThreshold = 1.0f;
+    // Variables for the delays for entering and exiting the skate mode 
+    private bool startedEnterDelay = false;
+    private bool startedExitDelay = false;
+    private float enterIncrease = 0.2f;
+    private float exitIncrease = 0.05f;
+    private float delayCounter = 0.0f;
+    private float delayThreshold = 1.0f;
 
-    public int savedSkateMode = 0;        // When the player ollies the current skate mode will be saved and will be applied again after landing
+    private float currentBoardSpeed = 0;
+    private int savedSkateMode = 0;        // When the player ollies, the current skate mode will be saved and will be applied again after landing
 
     // REWIRED
     private bool XButtonDown = false;
     private bool XButtonUp = false;
+    private bool SquareButton = false;
+    private bool TriangleButton = false;
+    private bool CircleButton = false;
+
     private bool dPadLeft = false;
     private bool dPadRight = false;
+    private bool dPadDown = false;
 
     // DEV variables
-    private bool DEVRESET = false;
-    public float BoardSpeed = 0;
+    public TMP_Text BoardSpeedText;
 
 
     private void Awake() {
         player = ReInput.players.GetPlayer(playerID);
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody>();
     }
 
 
@@ -61,23 +81,25 @@ public class SkateboardController : MonoBehaviour {
 
 
     private void GetStats() {
-        MaxRollForce = CharacterSheetScript.StatSpeed / 2;
-        MaxSkateForce = CharacterSheetScript.StatSpeed;
-
+        MaxBoardSpeed = CharacterSheetScript.StatSpeed;
         OllieForce = CharacterSheetScript.StatOllie;
+
+        increaseForce = MaxBoardSpeed / speedIncreaseVar;
     }
 
 
     private void Update() {
         GetInput();
-
-        isGrounded = Physics2D.OverlapCircle(GroundChecker.position, GroundDistance, platformLayerMask);
+        CheckIfGrounded();
+        CheckDirection();
 
         ///////////////////////////////////////////////////////////////////////////////////////
 
-        // Reset player to the beginning of the level
-        if (DEVRESET) DEVReset();
-        BoardSpeed = rb.velocity.magnitude;
+        if (TriangleButton) LevelStartRespawn();               // Reset player to the beginning of the level
+        if (CircleButton) CheckpointRespawn();                 // Reset player at where he is right now
+
+        currentBoardSpeed = rb.velocity.magnitude;             // Get speed of the board in m/s
+        BoardSpeedText.text = currentBoardSpeed.ToString("F1");
 
         ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -103,39 +125,57 @@ public class SkateboardController : MonoBehaviour {
                 // Check for bails
             }
         }
+
+        ///////////////////////////////////////////////////////////////////////////////////////
+
+        // if (!isGrounded) {
+        //     if (SquareButton) {
+        //         animator.SetBool("Pop Shove-It", true);
+        //     }
+        // }
     }
 
 
     private void FixedUpdate() {
-        if (dPadRight) {
-            if (SkateMode == 0) {
-                SkateMode = 1;
-                rb.velocity = transform.right * MaxRollForce;
-            }
+        switch (SkateMode) {
+            case 0:
+                if (XButtonDown) { EnterSkateModeDelay(); }
+                break;
+            case 1:
+                if (XButtonDown) { IncreaseSpeed(); }
+                break;
+            case 2:
+                if (XButtonDown) { ApplyPushForce(MaxBoardSpeed); }
+                if (!XButtonDown) { ExitSkateModeDelay(); }
+                break;
+            // case 3:
+                // if (isGrounded) { ExitSkateModeDelay(); }
+                // break;
+            case 4:
+                DecreaseSpeed(decreaseForce);
+                // if (XButtonDown) { IncreaseSpeed(); }
+                if (XButtonDown) { EnterSkateModeDelay(); }
+                break;
+            case 5:
+                DecreaseSpeed(slowDownForce);
+                break;
         }
 
-        if (dPadLeft) {
-            if (SkateMode == 1 || SkateMode == 2) {
-                if (!XButtonDown) {
-                    ResetValuesWhenStopping();
+        // Slowing down the player when pressing the DPad Down button
+        if (SkateMode > 0) {
+            if (dPadDown) {
+                if (SkateMode != 5) {
+                    savedSkateMode = SkateMode;
+                }
+                SkateMode = 5;
+            } else {
+                if (SkateMode == 5) {
+                    SkateMode = 1;
                 }
             }
         }
 
-        if (XButtonDown) {
-            if (SkateMode == 0 || SkateMode == 1) {
-                EnterSkateMode();
-            }
-        }
-
-        switch (SkateMode) {
-            case 1:
-                ApplyPushForce(MaxRollForce);
-                break;
-            case 2:
-                ApplyPushForce(MaxSkateForce);
-                break;
-        }
+        CameraZoom();
     }
 
 
@@ -143,76 +183,188 @@ public class SkateboardController : MonoBehaviour {
         XButtonDown = player.GetButton("X");
         XButtonUp = player.GetButtonUp("X");
 
+        SquareButton = player.GetButtonUp("Square");
+        TriangleButton = player.GetButtonUp("Triangle");
+        CircleButton = player.GetButtonUp("Circle");
+
         dPadLeft = player.GetButton("DPad Left");
         dPadRight = player.GetButton("DPad Right");
-
-        DEVRESET = player.GetButtonUp("Circle");
+        dPadDown = player.GetButton("DPad Down");
     }
 
 
-    private void EnterSkateMode() {
-        if (!startedDelay) {
-            enterDelay = 0.0f;
-            startedDelay = true;
+    private void CheckIfGrounded() {
+        isGrounded = Physics.CheckSphere(GroundChecker.position, GroundDistance, platformLayerMask, QueryTriggerInteraction.Ignore);
+    }
+
+
+    private void CheckDirection() {
+        if (dPadRight) {
+            direction = 1;
+        } else if (dPadLeft) {
+            direction = -1;
+        }
+    }
+
+
+    private void EnterSkateModeDelay() {
+        if (!startedEnterDelay) {
+            delayCounter = 0.0f;
+            startedEnterDelay = true;
         }
 
-        enterDelay += enterIncrease;
+        delayCounter += enterIncrease;
 
-        if (enterDelay >= enterThreshold) {
+        if (delayCounter >= delayThreshold) {
+            SkateMode = 1;
+            startedEnterDelay = false;
+        }
+    }
+
+
+    private void IncreaseSpeed() {
+        if (currentBoardSpeed < MaxBoardSpeed - appliedForceTolerance) {
+            appliedForce = currentBoardSpeed + increaseForce;
+
+            ApplyPushForce(appliedForce);
+        } else {
             SkateMode = 2;
         }
     }
 
 
-    private void ResetValuesWhenStopping() {
-        savedSkateMode = 0;
-        SkateMode = 0;
-        AppliedForce = 0;
-        startedDelay = false;
-    }
-
-
-    private void ApplyPushForce(float maxForce) {
-        if (AppliedForce < maxForce) {
-            AppliedForce += IncreaseForce;
-        } else {
-            AppliedForce = maxForce;
+    private void ApplyPushForce(float pushForce) {
+        // This if function only applies force when the skateboard is slower than the max speed
+        // otherwise it would limit the speed to the max even if it's rolling down a slope
+        if (currentBoardSpeed < MaxBoardSpeed) {
+            Vector3 newForce = transform.right * pushForce * direction;
+            newForce.y = rb.velocity.y;
+            rb.velocity = newForce;
         }
-
-        // rb.velocity = transform.right * AppliedForce;
-        // rb.AddForce(transform.right * maxForce, ForceMode2D.Force);
-
-        rb.velocity = new Vector2(AppliedForce, rb.velocity.y);
     }
 
 
     private void ApplyOllieForce() {
-        startedDelay = false;
+        startedEnterDelay = false;
+        startedExitDelay = false;
 
-        float ollieForceMultiplier = BoardSpeed / 10;
+        float ollieForceMultiplier = MapSpeed();
         float calculatedOllieForce = OllieForce * ollieForceMultiplier;
-
-        if (calculatedOllieForce < ollieForceMin) {
-            calculatedOllieForce = ollieForceMin;
-        } else if (calculatedOllieForce > ollieForceMax) {
-            calculatedOllieForce = ollieForceMax;
-        }
 
         Vector2 newOllieForce = new Vector2(0f, calculatedOllieForce);
         rb.AddForce(newOllieForce);
     }
 
 
-    private void DEVReset() {
+    private float MapSpeed() {
+        float multiplierRange = maxMultiplier - minMultiplier;
+        float speedRange = MaxBoardSpeed - MinBoardSpeed;
+        float inputSpeed = currentBoardSpeed - MinBoardSpeed;
+
+        float firstPart = multiplierRange / speedRange;
+        float secondPart = firstPart * inputSpeed;
+
+        float mappedValue = minMultiplier + secondPart;
+
+        return mappedValue;
+    }
+
+
+    private void ExitSkateModeDelay() {
+        if (!startedExitDelay) {
+            delayCounter = 0.0f;
+            startedExitDelay = true;
+        }
+
+        delayCounter += exitIncrease;
+
+        ApplyPushForce(MaxBoardSpeed);
+
+        if (delayCounter >= delayThreshold) {
+            SkateMode = 4;
+            startedExitDelay = false;
+        }
+    }
+
+
+    private void DecreaseSpeed(float decreasingForce) {
+        if (appliedForce > 0) {
+            appliedForce = currentBoardSpeed - decreasingForce;
+            ApplyPushForce(appliedForce);
+        } else {
+            ResetOnStop();
+        }
+    }
+
+
+    private void ResetOnStop() {
+        startedEnterDelay = false;
+        startedExitDelay = false;
+
         savedSkateMode = 0;
         SkateMode = 0;
 
-        AppliedForce = 0;
-        rb.velocity = Vector2.zero;
-        rb.angularVelocity = 0;
+        appliedForce = 0;
+    }
 
-        this.transform.position = new Vector3(0, 0.2f, 0);
+
+    private void CameraZoom() {
+        Vector2 direction = new Vector2(0, -1);
+        RaycastHit2D hit = Physics2D.Raycast(this.gameObject.transform.position, direction, Mathf.Infinity, platformLayerMask);
+
+        if (hit.collider != null) {
+            float desiredFOV = hit.distance * distanceMultiplier;
+            float smoothedFOV = Mathf.Lerp(CameraControllerScript.FieldOfView, desiredFOV, fovSmoothing * Time.fixedDeltaTime);
+
+            CameraControllerScript.FieldOfView = smoothedFOV;
+        }
+    }
+
+
+    public void LevelStartRespawn() {
+        savedSkateMode = 0;
+        SkateMode = 0;
+
+        direction = 1;
+
+        appliedForce = 0;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        this.transform.position = new Vector3(0, 1.0f, 0);
         this.transform.rotation = Quaternion.Euler(Vector3.zero);
     }
+
+
+    public void CheckpointRespawn() {
+        savedSkateMode = 0;
+        SkateMode = 0;
+
+        appliedForce = 0;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        float respawnPosX = 0f;
+
+        if (direction == 1) {
+            respawnPosX = this.transform.position.x - 2.0f;
+        } else if (direction == -1) {
+            respawnPosX = this.transform.position.x + 2.0f;
+        }
+
+        this.transform.position = new Vector3(respawnPosX, 1.0f, 0);
+        this.transform.rotation = Quaternion.Euler(new Vector3(
+            0,
+            this.transform.rotation.y,
+            0
+        ));
+    }
+    
+
+    public void AnimationEnded() {
+        animator.SetBool("Pop Shove-It", false);
+    }
+
+
 
 }

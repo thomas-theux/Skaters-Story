@@ -58,7 +58,7 @@ public class BoardController : MonoBehaviour {
 
 
     private float currentBoardSpeed = 0;
-    private int savedSkateMode = 0;        // When the player ollies the current skate mode will be saved and will be applied again after landing
+    private int savedSkateMode = 0;        // When the player ollies, the current skate mode will be saved and will be applied again after landing
 
     // REWIRED
     private bool XButtonDown = false;

@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/2D vs 3D/3D Test 2.unity
+- path: Assets/Scenes/SampleScene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
