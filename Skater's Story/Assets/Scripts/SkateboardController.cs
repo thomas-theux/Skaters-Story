@@ -23,7 +23,7 @@ public class SkateboardController : MonoBehaviour {
     private float maxMultiplier = 1.0f;
 
     // Variables for ground checking
-    public bool isGrounded = false;
+    public bool IsGrounded = false;
     public Transform GroundChecker;
     private float GroundDistance = 0.1f;
     [SerializeField] public LayerMask GroundedLayer;
@@ -33,10 +33,9 @@ public class SkateboardController : MonoBehaviour {
 
 
     // REWIRED
-    private float axisInput;
+    private float horizontalAxis;
 
     private bool XButton = false;
-    private bool SquareButton = false;
     private bool TriangleButton = false;
 
 
@@ -67,7 +66,7 @@ public class SkateboardController : MonoBehaviour {
         if (TriangleButton) CheckpointRespawn();
         
         if (XButton) {
-            if (isGrounded) {
+            if (IsGrounded) {
                 ApplyOllieForce();
             }
         }
@@ -76,30 +75,30 @@ public class SkateboardController : MonoBehaviour {
 
         currentBoardSpeed = rb.velocity.magnitude;
         BoardSpeedText.text = currentBoardSpeed.ToString("F1");
+
     }
 
 
     private void FixedUpdate() {
-        // rb.AddRelativeForce(axisInput * maxBoardSpeed, 0, 0);
-        // rb.AddRelativeForce(0, 0, axisInput * maxBoardSpeed);
+        // rb.AddRelativeForce(horizontalAxis * maxBoardSpeed, 0, 0);
+        // rb.AddRelativeForce(0, 0, horizontalAxis * maxBoardSpeed);
 
-        // rb.AddForce(transform.forward * axisInput * maxBoardSpeed);
-        rb.AddForce(axisInput * maxBoardSpeed, 0, 0);
+        // rb.AddForce(transform.forward * horizontalAxis * maxBoardSpeed);
+        rb.AddForce(horizontalAxis * maxBoardSpeed, 0, 0);
     }
 
 
     private void GetInput() {
-        // axisInput = Input.GetAxis("Horizontal");
-        axisInput = player.GetAxis("DPad Horizontal");
+        // horizontalAxis = Input.GetAxis("Horizontal");
+        horizontalAxis = player.GetAxis("Horizontal");
 
         XButton = player.GetButtonDown("X");
-        SquareButton = player.GetButtonUp("Square");
         TriangleButton = player.GetButtonUp("Triangle");
     }
 
 
     private void CheckIfGrounded() {
-        isGrounded = Physics.CheckSphere(GroundChecker.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore);
+        IsGrounded = Physics.CheckSphere(GroundChecker.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore);
     }
 
 
