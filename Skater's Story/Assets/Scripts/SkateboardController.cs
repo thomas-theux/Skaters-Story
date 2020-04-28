@@ -11,6 +11,7 @@ public class SkateboardController : MonoBehaviour {
 
     private Rigidbody rb;
     public CharacterSheet CharacterSheetScript;
+    public TricksManager TricksManagerScript;
 
     public int direction = 1;
 
@@ -24,11 +25,17 @@ public class SkateboardController : MonoBehaviour {
 
     // Variables for ground checking
     public bool IsGrounded = false;
+    public bool IsFlipped = false;
     public Transform GroundChecker;
-    private float GroundDistance = 0.1f;
+    public Transform FlippedChecker;
+    private float GroundDistance = 0.025f;
     [SerializeField] public LayerMask GroundedLayer;
 
     private float currentBoardSpeed;
+
+    private float angleSmoothSpeed = 3.0f;
+
+    // DEV
     public TMP_Text BoardSpeedText;
 
 
@@ -57,7 +64,11 @@ public class SkateboardController : MonoBehaviour {
 
 
     private void Update () {
-        GetInput();
+        // Only be able to move the skater when he's not bailing or when he's grounded
+        if (!TricksManagerScript.IsBailing) {
+            GetInput();
+        }
+
         CheckDirection();
         CheckIfGrounded();
 
@@ -75,7 +86,6 @@ public class SkateboardController : MonoBehaviour {
 
         currentBoardSpeed = rb.velocity.magnitude;
         BoardSpeedText.text = currentBoardSpeed.ToString("F1");
-
     }
 
 
@@ -84,13 +94,24 @@ public class SkateboardController : MonoBehaviour {
         // rb.AddRelativeForce(0, 0, horizontalAxis * maxBoardSpeed);
 
         // rb.AddForce(transform.forward * horizontalAxis * maxBoardSpeed);
-        rb.AddForce(horizontalAxis * maxBoardSpeed, 0, 0);
+        if (!TricksManagerScript.IsBailing) {
+            rb.AddForce(horizontalAxis * maxBoardSpeed, 0, 0);
+        }
+
+        // Smoothen the board out while in the air
+        // if (!IsGrounded) {
+        //     float desiredZAngle = 0;
+        //     // float smoothedAngle = Mathf.Lerp(transform.eulerAngles.z, desiredZAngle, angleSmoothSpeed * Time.deltaTime);
+
+        //     transform.rotation = Quaternion.AngleAxis(desiredZAngle, Vector3.forward * direction);            
+        // }
     }
 
 
     private void GetInput() {
-        // horizontalAxis = Input.GetAxis("Horizontal");
-        horizontalAxis = player.GetAxis("Horizontal");
+        if (IsGrounded) {
+            horizontalAxis = player.GetAxis("Horizontal");
+        }
 
         XButton = player.GetButtonDown("X");
         TriangleButton = player.GetButtonUp("Triangle");
@@ -99,6 +120,7 @@ public class SkateboardController : MonoBehaviour {
 
     private void CheckIfGrounded() {
         IsGrounded = Physics.CheckSphere(GroundChecker.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore);
+        IsFlipped = Physics.CheckSphere(FlippedChecker.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore);
     }
 
 
@@ -144,6 +166,16 @@ public class SkateboardController : MonoBehaviour {
         } else if (direction == -1) {
             respawnPosX = this.transform.position.x + 2.0f;
         }
+
+        this.transform.position = new Vector3(respawnPosX, 1.0f, 0);
+        this.transform.rotation = Quaternion.Euler(Vector3.zero);
+    }
+
+
+    public void RespawnAfterBail() {
+        rb.velocity = Vector3.zero;
+
+        float respawnPosX = this.transform.position.x;
 
         this.transform.position = new Vector3(respawnPosX, 1.0f, 0);
         this.transform.rotation = Quaternion.Euler(Vector3.zero);
