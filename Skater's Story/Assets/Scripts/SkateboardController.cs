@@ -9,9 +9,12 @@ public class SkateboardController : MonoBehaviour {
     public int PlayerID = 0;
     private Player player;
 
-    private Rigidbody rb;
+    public Rigidbody rb;
     public CharacterSheet CharacterSheetScript;
-    public TricksManager TricksManagerScript;
+    public TricksController TricksControllerScript;
+
+    // private float slowMotionSpeed = 0.8f;
+    // private bool timeIsSlowedDown = false;
 
     public int direction = 1;
 
@@ -48,7 +51,6 @@ public class SkateboardController : MonoBehaviour {
 
     private void Awake () {
         player = ReInput.players.GetPlayer(PlayerID);
-        rb = GetComponent <Rigidbody>();
     }
 
 
@@ -65,7 +67,7 @@ public class SkateboardController : MonoBehaviour {
 
     private void Update () {
         // Only be able to move the skater when he's not bailing or when he's grounded
-        if (!TricksManagerScript.IsBailing) {
+        if (!TricksControllerScript.IsBailing) {
             GetInput();
         }
 
@@ -86,6 +88,21 @@ public class SkateboardController : MonoBehaviour {
 
         currentBoardSpeed = rb.velocity.magnitude;
         BoardSpeedText.text = currentBoardSpeed.ToString("F1");
+
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        // Slow down time when jumping
+        // if (!IsGrounded) {
+        //     if (!timeIsSlowedDown) {
+        //         timeIsSlowedDown = true;
+        //         Time.timeScale = slowMotionSpeed;
+        //     }
+        // } else {
+        //     if (timeIsSlowedDown) {
+        //         timeIsSlowedDown = false;
+        //         Time.timeScale = 1.0f;
+        //     }
+        // }
     }
 
 
@@ -94,17 +111,14 @@ public class SkateboardController : MonoBehaviour {
         // rb.AddRelativeForce(0, 0, horizontalAxis * maxBoardSpeed);
 
         // rb.AddForce(transform.forward * horizontalAxis * maxBoardSpeed);
-        if (!TricksManagerScript.IsBailing) {
-            rb.AddForce(horizontalAxis * maxBoardSpeed, 0, 0);
+        if (!TricksControllerScript.IsBailing) {
+            // rb.AddForce(horizontalAxis * maxBoardSpeed, 0, 0);
+            if (IsGrounded) {
+                rb.AddForce(transform.right * horizontalAxis * maxBoardSpeed);
+            } else {
+                rb.AddForce(horizontalAxis * maxBoardSpeed, 0, 0);
+            }
         }
-
-        // Smoothen the board out while in the air
-        // if (!IsGrounded) {
-        //     float desiredZAngle = 0;
-        //     // float smoothedAngle = Mathf.Lerp(transform.eulerAngles.z, desiredZAngle, angleSmoothSpeed * Time.deltaTime);
-
-        //     transform.rotation = Quaternion.AngleAxis(desiredZAngle, Vector3.forward * direction);            
-        // }
     }
 
 
@@ -157,6 +171,7 @@ public class SkateboardController : MonoBehaviour {
 
 
     public void CheckpointRespawn() {
+        horizontalAxis = 0;
         rb.velocity = Vector3.zero;
 
         float respawnPosX = 0f;
@@ -173,6 +188,7 @@ public class SkateboardController : MonoBehaviour {
 
 
     public void RespawnAfterBail() {
+        horizontalAxis = 0;
         rb.velocity = Vector3.zero;
 
         float respawnPosX = this.transform.position.x;

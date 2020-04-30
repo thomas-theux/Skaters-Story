@@ -6,9 +6,9 @@ using TMPro;
 
 public class CharacterSheet : MonoBehaviour {
 
-    public Slider ExpBar;
-    public TMP_Text SkaterLevelText;
-    public TMP_Text SkaterExpText;
+    public Image RespectBar;
+    public TMP_Text CurrentLevelText;
+    public TMP_Text CurrentRespectText;
 
     public float StatOllie = 200.0f;        // Max ollie probably shouldn't be over 220
     public float StatSpeed = 6.0f;          // Max speed probably shouldn't be over 8
@@ -18,53 +18,82 @@ public class CharacterSheet : MonoBehaviour {
 
     public int SkaterLevel = 1;
 
-    public float CurrentSkaterExp = 0;
-    private float ExpNeededToLevelUp = 100.0f;
-    private float ExpNeededLastLevel = 0.0f;
+    public float CurrentRespectValue = 0;
+    public float NewRespectValue = 0;
+    private float RespectNeededToLevelUp = 100;
+    private float RespectNeededLastLevel = 0;
 
     private float exponent = 1.5f;
-    private float baseExp = 100.0f;
+    private float baseRespect = 100.0f;
+
+    private float newRespectValue = 0.0f;
+    private float currentVelocity = 0.0f;
+    public float smoothTime;
+
+    public bool IncreasingRespect = false;
 
 
     private void Awake() {
-        DisplayExpBar();
-        SkaterLevelText.text = SkaterLevel + "";
+        // DisplayRespectBar();
+        CurrentLevelText.text = SkaterLevel + "";
     }
 
 
-    public void DisplayExpBar() {
-        // Show current exp
-        SkaterExpText.text = CurrentSkaterExp + " exp";
+    private void Update() {
+        if (IncreasingRespect) {
+            IncreaseRespect();
 
-        // Check for level up
-        if (CurrentSkaterExp > ExpNeededToLevelUp) {
-            LevelUp();
-            CalculateNeededExp();
+            CheckForLevelUp();
+
+            UpdateRespectText();
+            UpdateRespectBar();
         }
+    }
 
-        // Calculate and display value on exp bar
-        float calculatedCurrentExp = CurrentSkaterExp - ExpNeededLastLevel;
-        float calculatedNextLevelExp = ExpNeededToLevelUp - ExpNeededLastLevel;
 
-        float currentExpValue = calculatedCurrentExp / calculatedNextLevelExp;
+    private void IncreaseRespect() {
+        float desiredRespectValue = Mathf.SmoothDamp(CurrentRespectValue, NewRespectValue, ref currentVelocity, smoothTime);
+        CurrentRespectValue = desiredRespectValue;
+    }
 
-        ExpBar.value = currentExpValue;
+
+    private void CheckForLevelUp() {
+        if (CurrentRespectValue >= RespectNeededToLevelUp) {
+            LevelUp();
+            CalculateNeededRespect();
+        }
+    }
+
+
+    private void UpdateRespectText() {
+        CurrentRespectText.text = Mathf.Ceil(CurrentRespectValue) + " respect";
+    }
+
+
+    private void UpdateRespectBar() {
+        // Calculate and display value on respect bar
+        float calculatedCurrentRespect = CurrentRespectValue - RespectNeededLastLevel;
+        float calculatedNextLevelRespect = RespectNeededToLevelUp - RespectNeededLastLevel;
+
+        newRespectValue = calculatedCurrentRespect / calculatedNextLevelRespect;
+
+        RespectBar.fillAmount = newRespectValue;
     }
 
 
     public void LevelUp() {
         SkaterLevel++;
-        SkaterLevelText.text = SkaterLevel + "";
+        CurrentLevelText.text = SkaterLevel + "";
     }
 
 
-    public void CalculateNeededExp() {
-        ExpNeededLastLevel = ExpNeededToLevelUp;
+    public void CalculateNeededRespect() {
+        RespectNeededLastLevel = RespectNeededToLevelUp;
 
-        float calculatedExp = Mathf.Pow(SkaterLevel, exponent);
-        float neededExp = Mathf.Round(baseExp * calculatedExp);
+        float calculatedRespect = Mathf.Pow(SkaterLevel, exponent);
+        float neededRespect = baseRespect * calculatedRespect;
 
-        ExpNeededToLevelUp = neededExp;
+        RespectNeededToLevelUp = neededRespect;
     }
 
 }
