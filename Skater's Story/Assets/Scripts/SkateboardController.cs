@@ -46,7 +46,7 @@ public class SkateboardController : MonoBehaviour {
     private float horizontalAxis;
 
     private bool XButton = false;
-    private bool TriangleButton = false;
+    private bool OptionsButton = false;
 
 
     private void Awake () {
@@ -76,7 +76,7 @@ public class SkateboardController : MonoBehaviour {
 
         //////////////////////////////////////////////////////////////////////////////////////
 
-        if (TriangleButton) CheckpointRespawn();
+        if (OptionsButton) CheckpointRespawn();
         
         if (XButton) {
             if (IsGrounded) {
@@ -128,7 +128,7 @@ public class SkateboardController : MonoBehaviour {
         }
 
         XButton = player.GetButtonDown("X");
-        TriangleButton = player.GetButtonUp("Triangle");
+        OptionsButton = player.GetButtonUp("Options");
     }
 
 

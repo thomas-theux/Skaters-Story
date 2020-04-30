@@ -420,6 +420,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
+  - m_Name: ------------------------------------
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
   - m_Name: Pop Shove-It
     m_Type: 9
     m_DefaultFloat: 0
@@ -469,6 +475,12 @@ AnimatorController:
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: 360 Hardflip
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: -------------------------------------
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -790,7 +802,7 @@ AnimatorStateMachine:
     m_Position: {x: 580, y: 250, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8114804505133340069}
-    m_Position: {x: 910, y: 110, z: 0}
+    m_Position: {x: 140, y: 20, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1951693468707816679}
     m_Position: {x: 370, y: 380, z: 0}
@@ -809,9 +821,9 @@ AnimatorStateMachine:
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
-  m_AnyStatePosition: {x: 930, y: -50, z: 0}
+  m_AnyStatePosition: {x: 160, y: 80, z: 0}
   m_EntryPosition: {x: 160, y: 120, z: 0}
-  m_ExitPosition: {x: 160, y: 80, z: 0}
+  m_ExitPosition: {x: 410, y: -190, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -7557162825964640643}
 --- !u!1101 &7035190713673905511
