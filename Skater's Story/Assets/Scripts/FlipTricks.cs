@@ -12,6 +12,30 @@ public class FlipTricks: MonoBehaviour {
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
+public class PopShoveIt: FlipTricks {
+    public PopShoveIt() {
+        this.trickName = "Pop Shove-It";
+        this.respectGain = TricksManager.respectBasic;
+    }
+
+    public override void PlayAnimation(Animator SkateboardAnim) {
+        SkateboardAnim.SetTrigger(this.trickName);
+    }
+}
+
+public class ThreeSixtyShoveIt: FlipTricks {
+    public ThreeSixtyShoveIt() {
+        this.trickName = "360 Shove-It";
+        this.respectGain = TricksManager.respectBasic * TricksManager.LevelUpMultiplier;
+    }
+
+    public override void PlayAnimation(Animator SkateboardAnim) {
+        SkateboardAnim.SetTrigger(this.trickName);
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+
 public class Kickflip: FlipTricks {
     public Kickflip() {
         this.trickName = "Kickflip";

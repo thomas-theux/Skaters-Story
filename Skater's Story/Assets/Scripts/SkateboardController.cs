@@ -29,10 +29,13 @@ public class SkateboardController : MonoBehaviour {
     // Variables for ground checking
     public bool IsGrounded = false;
     public bool IsFlipped = false;
+    public bool IsOnRail = false;
     public Transform GroundChecker;
     public Transform FlippedChecker;
     private float GroundDistance = 0.025f;
     [SerializeField] public LayerMask GroundedLayer;
+    [SerializeField] public LayerMask EveryLayer;
+    [SerializeField] public LayerMask RailLayer;
 
     private float currentBoardSpeed;
 
@@ -66,10 +69,7 @@ public class SkateboardController : MonoBehaviour {
 
 
     private void Update () {
-        // Only be able to move the skater when he's not bailing or when he's grounded
-        if (!TricksControllerScript.IsBailing) {
-            GetInput();
-        }
+        GetInput();
 
         CheckDirection();
         CheckIfGrounded();
@@ -79,7 +79,7 @@ public class SkateboardController : MonoBehaviour {
         if (OptionsButton) CheckpointRespawn();
         
         if (XButton) {
-            if (IsGrounded) {
+            if (IsGrounded || IsOnRail) {
                 ApplyOllieForce();
             }
         }
@@ -123,18 +123,23 @@ public class SkateboardController : MonoBehaviour {
 
 
     private void GetInput() {
-        if (IsGrounded) {
-            horizontalAxis = player.GetAxis("Horizontal");
+        // Only be able to move the skater when he's not bailing or when he's grounded
+        if (!TricksControllerScript.IsBailing) {
+            if (IsGrounded) {
+                horizontalAxis = player.GetAxis("Horizontal");
+            }
+
+            XButton = player.GetButtonDown("X");
         }
 
-        XButton = player.GetButtonDown("X");
         OptionsButton = player.GetButtonUp("Options");
     }
 
 
     private void CheckIfGrounded() {
         IsGrounded = Physics.CheckSphere(GroundChecker.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore);
-        IsFlipped = Physics.CheckSphere(FlippedChecker.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore);
+        IsFlipped = Physics.CheckSphere(FlippedChecker.position, GroundDistance, EveryLayer, QueryTriggerInteraction.Ignore);
+        IsOnRail = Physics.CheckSphere(GroundChecker.position, GroundDistance, RailLayer, QueryTriggerInteraction.Ignore);
     }
 
 
