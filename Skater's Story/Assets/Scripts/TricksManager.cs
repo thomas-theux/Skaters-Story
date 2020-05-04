@@ -39,9 +39,6 @@ public class TricksManager : MonoBehaviour {
     private void Awake() {
         //////////////////////////////////////////////////////////////////////////////////////
 
-        FlipTricksNoDirArr.Add(new PopShoveIt());
-        FlipTricksNoDirArr.Add(new ThreeSixtyShoveIt());
-
         FlipTricksLeftArr.Add(new Kickflip());
         FlipTricksLeftArr.Add(new DoubleKickflip());
 
@@ -54,16 +51,16 @@ public class TricksManager : MonoBehaviour {
         FlipTricksDownArr.Add(new Hardflip());
         FlipTricksDownArr.Add(new ThreeSixtyHardflip());
 
-        FlipTricksArr.Add(FlipTricksNoDirArr);
+        FlipTricksNoDirArr.Add(new PopShoveIt());
+        FlipTricksNoDirArr.Add(new ThreeSixtyShoveIt());
+
         FlipTricksArr.Add(FlipTricksLeftArr);
         FlipTricksArr.Add(FlipTricksUpArr);
         FlipTricksArr.Add(FlipTricksRightArr);
         FlipTricksArr.Add(FlipTricksDownArr);
+        FlipTricksArr.Add(FlipTricksNoDirArr);
 
         //////////////////////////////////////////////////////////////////////////////////////
-        
-        GrindTricksNoDirArr.Add(new FiftyFifty());
-        GrindTricksNoDirArr.Add(new Overcrook());
         
         GrindTricksLeftArr.Add(new Boardslide());
         GrindTricksLeftArr.Add(new Darkslide());
@@ -76,12 +73,15 @@ public class TricksManager : MonoBehaviour {
 
         GrindTricksDownArr.Add(new FiveOGrind());
         GrindTricksDownArr.Add(new Bluntslide());
+        
+        GrindTricksNoDirArr.Add(new FiftyFifty());
+        GrindTricksNoDirArr.Add(new Overcrook());
 
-        GrindTricksArr.Add(GrindTricksNoDirArr);
         GrindTricksArr.Add(GrindTricksLeftArr);
         GrindTricksArr.Add(GrindTricksUpArr);
         GrindTricksArr.Add(GrindTricksRightArr);
         GrindTricksArr.Add(GrindTricksDownArr);
+        GrindTricksArr.Add(GrindTricksNoDirArr);
     }
 
 }

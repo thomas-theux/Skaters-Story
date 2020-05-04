@@ -17,6 +17,8 @@ public class SkateboardController : MonoBehaviour {
     // private bool timeIsSlowedDown = false;
 
     public int direction = 1;
+    private bool directionSwitchR = false;
+    private bool directionSwitchL = false;
 
     private float minBoardSpeed = 0;             // The min speed of the board
     private float maxBoardSpeed = 0;             // The max speed when holding the X button
@@ -30,17 +32,19 @@ public class SkateboardController : MonoBehaviour {
     public bool IsGrounded = false;
     public bool IsFlipped = false;
     public bool IsOnRail = false;
+    public bool CanGrind = false;
+
     public Transform GroundCheckerTail;
     public Transform GroundCheckerNose;
     public Transform FlippedChecker;
+
     private float GroundDistance = 0.025f;
+
     [SerializeField] public LayerMask GroundedLayer;
     [SerializeField] public LayerMask EveryLayer;
     [SerializeField] public LayerMask RailLayer;
 
     private float currentBoardSpeed;
-
-    private float angleSmoothSpeed = 3.0f;
 
     // DEV
     public TMP_Text BoardSpeedText;
@@ -60,6 +64,7 @@ public class SkateboardController : MonoBehaviour {
 
     private void Start() {
         GetStats();
+        directionSwitchR = true;
     }
 
 
@@ -138,29 +143,47 @@ public class SkateboardController : MonoBehaviour {
 
 
     private void CheckIfGrounded() {
-        if (Physics.CheckSphere(GroundCheckerTail.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore) || Physics.CheckSphere(GroundCheckerNose.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore)) {
+        if (Physics.CheckSphere(GroundCheckerTail.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore) ||
+        Physics.CheckSphere(GroundCheckerNose.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore)) {
             IsGrounded = true;
         } else {
             IsGrounded = false;
         }
 
-        // IsGrounded = Physics.CheckSphere(GroundCheckerTail.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore);
         IsFlipped = Physics.CheckSphere(FlippedChecker.position, GroundDistance, EveryLayer, QueryTriggerInteraction.Ignore);
-        IsOnRail = Physics.CheckSphere(GroundCheckerTail.position, GroundDistance, RailLayer, QueryTriggerInteraction.Ignore);
 
-        // if (Physics.CheckSphere(GroundCheckerTail.position, GroundDistance, RailLayer, QueryTriggerInteraction.Ignore) || Physics.CheckSphere(GroundCheckerNose.position, GroundDistance, RailLayer, QueryTriggerInteraction.Ignore)) {
-        //     IsOnRail = true;
-        // } else {
-        //     IsOnRail = false;
-        // }
+        if (Physics.CheckSphere(GroundCheckerTail.position, GroundDistance, RailLayer, QueryTriggerInteraction.Ignore) ||
+        Physics.CheckSphere(GroundCheckerNose.position, GroundDistance, RailLayer, QueryTriggerInteraction.Ignore)) {
+            IsOnRail = true;
+        } else {
+            IsOnRail = false;
+        }
     }
 
 
     private void CheckDirection() {
         if (rb.velocity.x > 0) {
+
             direction = 1;
+
+            if (directionSwitchL) directionSwitchL = false;
+
+            if (!directionSwitchR) {
+                TricksControllerScript.SkateboardAnim.SetTrigger("Turn Right");
+                directionSwitchR = true;
+            }
+
         } else if (rb.velocity.x < 0) {
+
             direction = -1;
+
+            if (directionSwitchR) directionSwitchR = false;
+
+            if (!directionSwitchL) {
+                TricksControllerScript.SkateboardAnim.SetTrigger("Turn Left");
+                directionSwitchL = true;
+            }
+
         }
     }
 
@@ -213,6 +236,27 @@ public class SkateboardController : MonoBehaviour {
 
         this.transform.position = new Vector3(respawnPosX, 1.0f, 0);
         this.transform.rotation = Quaternion.Euler(Vector3.zero);
+    }
+
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.tag == "Rail") {
+            CanGrind = true;
+            TricksControllerScript.SkateboardAnim.SetBool("Can Grind", true);
+        }
+    }
+
+
+    private void OnTriggerExit(Collider other) {
+        if (other.tag == "Rail") {
+            CanGrind = false;
+            TricksControllerScript.SkateboardAnim.SetBool("Can Grind", false);
+        }
+    }
+
+
+    protected void LateUpdate() {
+        rb.transform.localEulerAngles = new Vector3(0, 0, transform.localEulerAngles.z);
     }
 
 }

@@ -85,12 +85,12 @@ public class TricksPerformer : MonoBehaviour {
                 if (trianglePressed) {
 
                     if (whichDirectionPressed > -1) {
-                        if (SkateboardControllerScript.IsOnRail) {
+                        if (SkateboardControllerScript.CanGrind) {
                             PerformGrindTrick(whichDirectionPressed);
                             whichDirectionPressed = -1;
                         }
                     } else {
-                        if (SkateboardControllerScript.IsOnRail) {
+                        if (SkateboardControllerScript.CanGrind) {
                             PerformGrindTrick(0);
                         }
                     }
@@ -124,7 +124,7 @@ public class TricksPerformer : MonoBehaviour {
         }
 
         // Set grind to done when player gets off the rail
-        if (!SkateboardControllerScript.IsOnRail) {
+        if (!SkateboardControllerScript.CanGrind) {
             if (PerformsGrindTrick) {
                 GrindTrickDone();
             }
@@ -161,7 +161,7 @@ public class TricksPerformer : MonoBehaviour {
 
 
     private void CheckIfIsOnRail() {
-        SkateboardAnim.SetBool("Is On Rail", SkateboardControllerScript.IsOnRail);
+        SkateboardAnim.SetBool("Is On Rail", SkateboardControllerScript.CanGrind);
     }
 
 

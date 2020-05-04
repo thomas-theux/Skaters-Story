@@ -14,17 +14,24 @@ public class TricksController : MonoBehaviour {
     public TMP_Text TrickName;
 
     public bool IsBailing = false;
-    public bool IsPerformingTrick = false;
+    
+    public bool PerformsTrick = false;
+    public bool PerformsFlipTrick = false;
+    public bool PerformsGrindTrick = false;
+
+    private int tricksArrLimit = 2;
 
     private float eraseTrickNameTimeFail = 0.2f;
     private float eraseTrickNameTimeSuccess = 1.5f;
 
+    private int respectForTrick = 0;
+    private string performedTrickName = "";
     public int GainRespect = 0;
 
     public int performedTricks = 0;
     private List<string> performedTricksArr = new List<string>();
 
-    private List<TrickCombination> TrickCombinationsArr = new List<TrickCombination>();
+    private List<TrickCombination> trickCombinationsArr = new List<TrickCombination>();
 
     private float buttonResetTime = 0.4f;
 
@@ -36,9 +43,11 @@ public class TricksController : MonoBehaviour {
     private bool modifierPressed = false;
 
     private bool squarePressed = false;
+    private bool trianglePressed = false;
 
     // REWIRED
     private bool SquareButton = false;
+    private bool TriangleButton = false;
 
 
     private void Awake () {
@@ -48,7 +57,7 @@ public class TricksController : MonoBehaviour {
 
     private void Update() {
         GetInput();
-
+        
         // Check for DPad activity
         if (getFirstActiveDpad() > -1) {
             whichDirectionPressed = getFirstActiveDpad();
@@ -65,23 +74,36 @@ public class TricksController : MonoBehaviour {
 
         // Write combination into array if both buttons have been pressed
         if (directionPressed && modifierPressed) {
-            SetNewCombination();
+            if (trickCombinationsArr.Count < tricksArrLimit) {
+                SetNewCombination();
+            }
             ResetButtons();
         }
 
         // Check for new combinations in array and perform trick
-        if (!IsPerformingTrick) {
-            if (TrickCombinationsArr.Count > 0) {
+        if (!PerformsTrick) {
+            if (trickCombinationsArr.Count > 0) {
                 PerformTrick();
             }
         }
 
         // Check for success or failure when landing
         if (SkateboardControllerScript.IsGrounded) {
-            if (IsPerformingTrick) {
+            if (PerformsFlipTrick) {
                 Bail();
             } else {
                 AwardRespect();
+            }
+
+            if (PerformsGrindTrick) {
+                AwardRespect();
+            }
+        }
+
+        // Set grind to done when player gets off the rail
+        if (!SkateboardControllerScript.CanGrind) {
+            if (PerformsGrindTrick) {
+                TrickDone();
             }
         }
     }
@@ -104,38 +126,38 @@ public class TricksController : MonoBehaviour {
 
     private void SetNewCombination() {
         TrickCombination newCombination = new TrickCombination(whichDirectionPressed, whichModifierPressed);
-        TrickCombinationsArr.Add(newCombination);
-        // print(newCombination.directionValue + " + " + newCombination.modifierValue);
+        trickCombinationsArr.Add(newCombination);
     }
 
 
     private void PerformTrick() {
-        IsPerformingTrick = true;
-
-        performedTricks++;
-
-        int getDirBtn = TrickCombinationsArr[0].directionValue;
-        int getModBtn = TrickCombinationsArr[0].modifierValue;
-
-        int respectForTrick = 0;
-        string performedTrickName = "";
+        int getDirBtn = trickCombinationsArr[0].directionValue;
+        int getModBtn = trickCombinationsArr[0].modifierValue;
 
         switch (getModBtn) {
+
             // FLIP TRICK
             case 0:
-                List<FlipTricks> whichDirection = TricksManager.FlipTricksArr[getDirBtn];
-                FlipTricks whichFlipTrick = whichDirection[TricksManager.FlipTricksLevel[getDirBtn]];
-
-                whichFlipTrick.PlayAnimation(SkateboardAnim);
-
-                respectForTrick = whichFlipTrick.respectGain;
-                performedTrickName = whichFlipTrick.trickName;
+                if (!SkateboardControllerScript.IsGrounded) {
+                    DoFlipTrick(getDirBtn);
+                    DisplayTrickName();
+                }
                 break;
+
             // GRIND TRICK
             case 1:
-                print("some grind trick");
+                if (SkateboardControllerScript.CanGrind) {
+                    DoGrindTrick(getDirBtn);
+                    DisplayTrickName();
+                }
                 break;
+            
         }
+    }
+
+
+    private void DisplayTrickName() {
+        performedTricks++;
 
         GainRespect += respectForTrick;
         performedTricksArr.Add(performedTrickName);
@@ -149,48 +171,87 @@ public class TricksController : MonoBehaviour {
 
         // Display trick name(s)
         TrickName.text = allPerformedTricksText;
+    }
 
-        // Remove trick from array
-        TrickCombinationsArr.RemoveAt(0);
+
+    private void DoFlipTrick(int getDirBtn) {
+        PerformsTrick = true;
+        PerformsFlipTrick = true;
+
+        List<FlipTricks> whichDirection = TricksManager.FlipTricksArr[getDirBtn];
+        FlipTricks whichFlipTrick = whichDirection[TricksManager.FlipTricksLevel[getDirBtn]];
+
+        whichFlipTrick.PlayAnimation(SkateboardAnim);
+
+        respectForTrick = whichFlipTrick.respectGain;
+        performedTrickName = whichFlipTrick.trickName;
+    }
+
+
+    private void DoGrindTrick(int getDirBtn) {
+        PerformsTrick = true;
+        PerformsGrindTrick = true;
+
+        List<GrindTricks> whichDirection = TricksManager.GrindTricksArr[getDirBtn];
+        GrindTricks whichFlipTrick = whichDirection[TricksManager.GrindTricksLevel[getDirBtn]];
+
+        // SkateboardControllerScript.rb.useGravity = false;
+        // SkateboardControllerScript.rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+
+        whichFlipTrick.PlayAnimation(SkateboardAnim);
+
+        respectForTrick = whichFlipTrick.respectGain;
+        performedTrickName = whichFlipTrick.trickName;
     }
 
 
     private void TrickDone() {
-        IsPerformingTrick = false;
+        // Remove trick from array
+        if (trickCombinationsArr.Count > 0) {
+            trickCombinationsArr.RemoveAt(0);
+        }
 
-        SkateboardControllerScript.gameObject.transform.rotation = Quaternion.Euler(
-            0.0f,
-            0.0f,
-            SkateboardControllerScript.gameObject.transform.eulerAngles.z
-        );
+        // SkateboardControllerScript.rb.useGravity = true;
+        // SkateboardControllerScript.rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
+
+        PerformsTrick = false;
+        PerformsFlipTrick = false;
+        PerformsGrindTrick = false;
+
+        // SkateboardControllerScript.gameObject.transform.rotation = Quaternion.Euler(
+        //     0.0f,
+        //     0.0f,
+        //     SkateboardControllerScript.gameObject.transform.eulerAngles.z
+        // );
     }
-
-    private void BailDone() {
-        IsBailing = false;
-
-        // Enable rotation and position constraints
-        SkateboardControllerScript.rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
-
-        SkateboardControllerScript.RespawnAfterBail();
-    }
-
 
     private void Bail() {
         IsBailing = true;
-        IsPerformingTrick = false;
+        PerformsTrick = false;
+        PerformsFlipTrick = false;
 
         GainRespect = 0;
         performedTricks = 0;
         performedTricksArr.Clear();
-        TrickCombinationsArr.Clear();
+        trickCombinationsArr.Clear();
 
         // Disable rotation and position constraints
-        SkateboardControllerScript.rb.constraints = RigidbodyConstraints.None;
+        // SkateboardControllerScript.rb.constraints = RigidbodyConstraints.None;
 
         // Instantly erase trick names when player bails
         StartCoroutine(EraseTrickName(eraseTrickNameTimeFail));
 
         SkateboardAnim.SetTrigger("Bail");
+    }
+
+
+    private void BailDone() {
+        IsBailing = false;
+
+        // Enable rotation and position constraints
+        // SkateboardControllerScript.rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
+
+        SkateboardControllerScript.RespawnAfterBail();
     }
 
 
@@ -202,7 +263,7 @@ public class TricksController : MonoBehaviour {
             GainRespect = 0;
             performedTricks = 0;
             performedTricksArr.Clear();
-            TrickCombinationsArr.Clear();
+            trickCombinationsArr.Clear();
 
             // Erase trick names after a few seconds
             StartCoroutine(EraseTrickName(eraseTrickNameTimeSuccess));
@@ -213,14 +274,15 @@ public class TricksController : MonoBehaviour {
     private IEnumerator EraseTrickName(float eraseTrickTime) {
         yield return new WaitForSeconds(eraseTrickTime);
         
-        if (!IsPerformingTrick) {
+        if (!PerformsTrick) {
             TrickName.text = "";
         }
     }
 
 
-    private void GetInput() {        
+    private void GetInput() {
         SquareButton = player.GetButton("Square");
+        TriangleButton = player.GetButton("Triangle");
     }
 
 
