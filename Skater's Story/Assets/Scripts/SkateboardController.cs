@@ -30,7 +30,8 @@ public class SkateboardController : MonoBehaviour {
     public bool IsGrounded = false;
     public bool IsFlipped = false;
     public bool IsOnRail = false;
-    public Transform GroundChecker;
+    public Transform GroundCheckerTail;
+    public Transform GroundCheckerNose;
     public Transform FlippedChecker;
     private float GroundDistance = 0.025f;
     [SerializeField] public LayerMask GroundedLayer;
@@ -137,9 +138,21 @@ public class SkateboardController : MonoBehaviour {
 
 
     private void CheckIfGrounded() {
-        IsGrounded = Physics.CheckSphere(GroundChecker.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore);
+        if (Physics.CheckSphere(GroundCheckerTail.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore) || Physics.CheckSphere(GroundCheckerNose.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore)) {
+            IsGrounded = true;
+        } else {
+            IsGrounded = false;
+        }
+
+        // IsGrounded = Physics.CheckSphere(GroundCheckerTail.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore);
         IsFlipped = Physics.CheckSphere(FlippedChecker.position, GroundDistance, EveryLayer, QueryTriggerInteraction.Ignore);
-        IsOnRail = Physics.CheckSphere(GroundChecker.position, GroundDistance, RailLayer, QueryTriggerInteraction.Ignore);
+        IsOnRail = Physics.CheckSphere(GroundCheckerTail.position, GroundDistance, RailLayer, QueryTriggerInteraction.Ignore);
+
+        // if (Physics.CheckSphere(GroundCheckerTail.position, GroundDistance, RailLayer, QueryTriggerInteraction.Ignore) || Physics.CheckSphere(GroundCheckerNose.position, GroundDistance, RailLayer, QueryTriggerInteraction.Ignore)) {
+        //     IsOnRail = true;
+        // } else {
+        //     IsOnRail = false;
+        // }
     }
 
 
