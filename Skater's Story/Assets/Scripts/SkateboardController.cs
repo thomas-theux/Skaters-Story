@@ -24,24 +24,26 @@ public class SkateboardController : MonoBehaviour {
     private float maxBoardSpeed = 0;             // The max speed when holding the X button
     private float ollieForce = 0f;               // How high the skater can jump
 
+    private Quaternion rotCur;
+    private float raycastDistance = 1.5f;
+    private float alignSpeed = 10.0f;
+    private bool aligning = false;
+
     // Ollie multiplier depending on current speed
-    private float minMultiplier = 0.5f;
-    private float maxMultiplier = 1.0f;
+    private float ollieMultiplierMin = 0.5f;
+    private float ollieMultiplierMax = 1.0f;
 
     // Variables for ground checking
     public bool IsGrounded = false;
-    public bool IsFlipped = false;
     public bool IsOnRail = false;
-    public bool CanGrind = false;
+    // public bool CanGrind = false;
 
-    public Transform GroundCheckerTail;
-    public Transform GroundCheckerNose;
-    public Transform FlippedChecker;
+    public Transform GroundChecker;
 
     private float GroundDistance = 0.025f;
+    private float RailDistance = 0.1f;
 
     [SerializeField] public LayerMask GroundedLayer;
-    [SerializeField] public LayerMask EveryLayer;
     [SerializeField] public LayerMask RailLayer;
 
     private float currentBoardSpeed;
@@ -79,6 +81,7 @@ public class SkateboardController : MonoBehaviour {
 
         CheckDirection();
         CheckIfGrounded();
+        AlignToSurface();
 
         //////////////////////////////////////////////////////////////////////////////////////
 
@@ -143,20 +146,26 @@ public class SkateboardController : MonoBehaviour {
 
 
     private void CheckIfGrounded() {
-        if (Physics.CheckSphere(GroundCheckerTail.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore) ||
-        Physics.CheckSphere(GroundCheckerNose.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore)) {
-            IsGrounded = true;
+        IsGrounded = Physics.CheckSphere(GroundChecker.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore);
+
+        IsOnRail = Physics.CheckSphere(GroundChecker.position, RailDistance, RailLayer, QueryTriggerInteraction.Ignore);
+        TricksControllerScript.SkateboardAnim.SetBool("Can Grind", IsOnRail);
+    }
+
+
+    private void AlignToSurface() {
+        Ray ray = new Ray(transform.position, -transform.up);
+        RaycastHit hit;
+
+        if(Physics.Raycast(ray, out hit, raycastDistance) == true) {
+            rotCur = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
+            aligning = true;
         } else {
-            IsGrounded = false;
+            aligning = false;
         }
 
-        IsFlipped = Physics.CheckSphere(FlippedChecker.position, GroundDistance, EveryLayer, QueryTriggerInteraction.Ignore);
-
-        if (Physics.CheckSphere(GroundCheckerTail.position, GroundDistance, RailLayer, QueryTriggerInteraction.Ignore) ||
-        Physics.CheckSphere(GroundCheckerNose.position, GroundDistance, RailLayer, QueryTriggerInteraction.Ignore)) {
-            IsOnRail = true;
-        } else {
-            IsOnRail = false;
+        if (aligning) {
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotCur, Time.deltaTime * alignSpeed);
         }
     }
 
@@ -189,6 +198,8 @@ public class SkateboardController : MonoBehaviour {
 
 
     private void ApplyOllieForce() {
+        TricksControllerScript.SkateboardAnim.SetTrigger("Ollie");
+
         float ollieForceMultiplier = MapSpeed();
         float calculatedOllieForce = ollieForce * ollieForceMultiplier;
 
@@ -198,14 +209,14 @@ public class SkateboardController : MonoBehaviour {
 
 
     private float MapSpeed() {
-        float multiplierRange = maxMultiplier - minMultiplier;
+        float multiplierRange = ollieMultiplierMax - ollieMultiplierMin;
         float speedRange = maxBoardSpeed - minBoardSpeed;
         float inputSpeed = currentBoardSpeed - minBoardSpeed;
 
         float firstPart = multiplierRange / speedRange;
         float secondPart = firstPart * inputSpeed;
 
-        float mappedValue = minMultiplier + secondPart;
+        float mappedValue = ollieMultiplierMin + secondPart;
 
         return mappedValue;
     }
@@ -239,20 +250,20 @@ public class SkateboardController : MonoBehaviour {
     }
 
 
-    private void OnTriggerEnter(Collider other) {
-        if (other.tag == "Rail") {
-            CanGrind = true;
-            TricksControllerScript.SkateboardAnim.SetBool("Can Grind", true);
-        }
-    }
+    // private void OnTriggerEnter(Collider other) {
+    //     if (other.tag == "Rail") {
+    //         CanGrind = true;
+    //         TricksControllerScript.SkateboardAnim.SetBool("Can Grind", true);
+    //     }
+    // }
 
 
-    private void OnTriggerExit(Collider other) {
-        if (other.tag == "Rail") {
-            CanGrind = false;
-            TricksControllerScript.SkateboardAnim.SetBool("Can Grind", false);
-        }
-    }
+    // private void OnTriggerExit(Collider other) {
+    //     if (other.tag == "Rail") {
+    //         CanGrind = false;
+    //         TricksControllerScript.SkateboardAnim.SetBool("Can Grind", false);
+    //     }
+    // }
 
 
     protected void LateUpdate() {

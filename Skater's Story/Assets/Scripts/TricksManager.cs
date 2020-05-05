@@ -14,11 +14,11 @@ public class TricksManager : MonoBehaviour {
 
     public static int[] FlipTricksLevel = {0, 0, 0, 0, 0};
 
-    public static List<FlipTricks> FlipTricksNoDirArr = new List<FlipTricks>();
     public static List<FlipTricks> FlipTricksLeftArr = new List<FlipTricks>();
     public static List<FlipTricks> FlipTricksUpArr = new List<FlipTricks>();
     public static List<FlipTricks> FlipTricksRightArr = new List<FlipTricks>();
     public static List<FlipTricks> FlipTricksDownArr = new List<FlipTricks>();
+    public static List<FlipTricks> FlipTricksNoDirArr = new List<FlipTricks>();
 
     public static List<List<FlipTricks>> FlipTricksArr = new List<List<FlipTricks>>();
 
@@ -26,11 +26,11 @@ public class TricksManager : MonoBehaviour {
 
     public static int[] GrindTricksLevel = {0, 0, 0, 0, 0};
 
-    public static List<GrindTricks> GrindTricksNoDirArr = new List<GrindTricks>();
     public static List<GrindTricks> GrindTricksLeftArr = new List<GrindTricks>();
     public static List<GrindTricks> GrindTricksUpArr = new List<GrindTricks>();
     public static List<GrindTricks> GrindTricksRightArr = new List<GrindTricks>();
     public static List<GrindTricks> GrindTricksDownArr = new List<GrindTricks>();
+    public static List<GrindTricks> GrindTricksNoDirArr = new List<GrindTricks>();
 
     public static List<List<GrindTricks>> GrindTricksArr = new List<List<GrindTricks>>();
 
@@ -61,18 +61,18 @@ public class TricksManager : MonoBehaviour {
         FlipTricksArr.Add(FlipTricksNoDirArr);
 
         //////////////////////////////////////////////////////////////////////////////////////
+
+        GrindTricksLeftArr.Add(new FiveOGrind());
+        GrindTricksLeftArr.Add(new Bluntslide());
         
-        GrindTricksLeftArr.Add(new Boardslide());
-        GrindTricksLeftArr.Add(new Darkslide());
+        GrindTricksUpArr.Add(new Boardslide());
+        GrindTricksUpArr.Add(new Darkslide());
 
-        GrindTricksUpArr.Add(new Nosegrind());
-        GrindTricksUpArr.Add(new Nosebluntslide());
+        GrindTricksRightArr.Add(new Nosegrind());
+        GrindTricksRightArr.Add(new Nosebluntslide());
 
-        GrindTricksRightArr.Add(new Tailslide());
-        GrindTricksRightArr.Add(new Feeble());
-
-        GrindTricksDownArr.Add(new FiveOGrind());
-        GrindTricksDownArr.Add(new Bluntslide());
+        GrindTricksDownArr.Add(new Tailslide());
+        GrindTricksDownArr.Add(new Feeble());
         
         GrindTricksNoDirArr.Add(new FiftyFifty());
         GrindTricksNoDirArr.Add(new Overcrook());

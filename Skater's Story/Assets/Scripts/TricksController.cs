@@ -101,7 +101,7 @@ public class TricksController : MonoBehaviour {
         }
 
         // Set grind to done when player gets off the rail
-        if (!SkateboardControllerScript.CanGrind) {
+        if (!SkateboardControllerScript.IsOnRail) {
             if (PerformsGrindTrick) {
                 TrickDone();
             }
@@ -146,7 +146,7 @@ public class TricksController : MonoBehaviour {
 
             // GRIND TRICK
             case 1:
-                if (SkateboardControllerScript.CanGrind) {
+                if (SkateboardControllerScript.IsOnRail) {
                     DoGrindTrick(getDirBtn);
                     DisplayTrickName();
                 }
