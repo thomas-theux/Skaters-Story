@@ -591,6 +591,110 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 66316119}
   m_Mesh: {fileID: 4300000, guid: e011d0c1faa6c9049860e688e98d52ac, type: 3}
+--- !u!1 &73309700
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 73309702}
+  - component: {fileID: 73309701}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &73309701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73309700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa3cc867c61c843bab22ac1cda2f7681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Ollie
+    clip: {fileID: 8300000, guid: b293a2b35f6284f3795c3903dac79b87, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Land Concrete
+    clip: {fileID: 8300000, guid: bfff02a6a81e34310b20469b72ca3f52, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Land Wood
+    clip: {fileID: 8300000, guid: 2da6165bc29b247e6923c070b8bd94a6, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Rolling Concrete
+    clip: {fileID: 8300000, guid: 91dc5060e18224fd4977dbae1bea7248, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Rolling Wood
+    clip: {fileID: 8300000, guid: 9ab34bb49193a4ac78ea8d9d14436d25, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Grind Rail
+    clip: {fileID: 8300000, guid: d468212263f5741249b3b656448dd270, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Bail
+    clip: {fileID: 8300000, guid: 9afd0a5f9ba864b92a0b256703caddca, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Land Rail
+    clip: {fileID: 8300000, guid: 70b481550f5164cdaafbd157976d577e, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Switch Direction
+    clip: {fileID: 8300000, guid: 335d489c807a44f83a3e175bd366a2dc, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Grind Wood
+    clip: {fileID: 8300000, guid: 73f12c941f12e4b24bc80e80bbefaf7a, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+--- !u!4 &73309702
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73309700}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &91212550
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,7 +788,7 @@ GameObject:
   - component: {fileID: 126854267}
   m_Layer: 9
   m_Name: RampFlat (1)
-  m_TagString: Untagged
+  m_TagString: Wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1774,7 +1878,7 @@ GameObject:
   - component: {fileID: 238615521}
   m_Layer: 9
   m_Name: WallRide
-  m_TagString: Untagged
+  m_TagString: Wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3242,7 +3346,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &461537284
 Animator:
@@ -3279,10 +3383,12 @@ MonoBehaviour:
   rb: {fileID: 0}
   CharacterSheetScript: {fileID: 461537282}
   TricksControllerScript: {fileID: 0}
+  TimeManagerScript: {fileID: 0}
+  BoardCollider: {fileID: 0}
   direction: 1
+  CurrentSurface: 
   IsGrounded: 0
   IsOnRail: 0
-  AttractionForce: 500
   GroundChecker: {fileID: 0}
   GroundedLayer:
     serializedVersion: 2
@@ -3321,7 +3427,7 @@ GameObject:
   - component: {fileID: 482815987}
   m_Layer: 9
   m_Name: RampFlat (2)
-  m_TagString: Untagged
+  m_TagString: Wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3412,9 +3518,8 @@ GameObject:
   - component: {fileID: 502407160}
   - component: {fileID: 502407163}
   - component: {fileID: 502407162}
-  - component: {fileID: 502407161}
   m_Layer: 10
-  m_Name: Rails (1)
+  m_Name: Rails 0
   m_TagString: Rail
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3437,18 +3542,6 @@ Transform:
   m_Father: {fileID: 1504340885}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &502407161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 502407159}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd16f959bf49a438fbcb5d95ec541cd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &502407162
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3460,8 +3553,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 9.77, y: 0.2, z: 1}
-  m_Center: {x: 2.85, y: 0.65, z: 0}
+  m_Size: {x: 5.9, y: 0.2, z: 1}
+  m_Center: {x: 0.945, y: 0.65, z: 0}
 --- !u!136 &502407163
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4379,7 +4472,7 @@ GameObject:
   - component: {fileID: 658476868}
   m_Layer: 0
   m_Name: SkateboardGO (1)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4400,10 +4493,12 @@ MonoBehaviour:
   rb: {fileID: 658476870}
   CharacterSheetScript: {fileID: 658476869}
   TricksControllerScript: {fileID: 1252161212}
+  TimeManagerScript: {fileID: 705196341}
+  BoardCollider: {fileID: 658476871}
   direction: 1
+  CurrentSurface: 
   IsGrounded: 0
   IsOnRail: 0
-  AttractionForce: 500
   GroundChecker: {fileID: 2062554737}
   GroundedLayer:
     serializedVersion: 2
@@ -4475,7 +4570,7 @@ BoxCollider:
   m_GameObject: {fileID: 658476867}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 0.85, y: 0.24, z: 0.2}
   m_Center: {x: 0, y: 0.08, z: 0}
@@ -4487,7 +4582,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 658476867}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 32, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 790432469}
@@ -4495,7 +4590,7 @@ Transform:
   - {fileID: 1252161216}
   - {fileID: 1500718058}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &671191578
 GameObject:
@@ -4667,6 +4762,65 @@ CapsuleCollider:
   m_Height: 87.6
   m_Direction: 0
   m_Center: {x: 41.73, y: 0.581, z: 0}
+--- !u!1 &705196338
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 705196340}
+  - component: {fileID: 705196339}
+  - component: {fileID: 705196341}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &705196339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705196338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ab79907dc7c44ea7bafdc52ea237b8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  THPSControls: 0
+--- !u!4 &705196340
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705196338}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &705196341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705196338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4115d9604f1584fc7bc79aa9c3f16744, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slowdownFactor: 0.05
+  slowdownLength: 2
 --- !u!1 &710904922
 GameObject:
   m_ObjectHideFlags: 0
@@ -4913,7 +5067,7 @@ GameObject:
   - component: {fileID: 734432968}
   m_Layer: 9
   m_Name: RampFlat
-  m_TagString: Untagged
+  m_TagString: Wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5185,10 +5339,12 @@ MonoBehaviour:
   rb: {fileID: 770338917}
   CharacterSheetScript: {fileID: 770338916}
   TricksControllerScript: {fileID: 922376793}
+  TimeManagerScript: {fileID: 0}
+  BoardCollider: {fileID: 0}
   direction: 1
+  CurrentSurface: 
   IsGrounded: 0
   IsOnRail: 0
-  AttractionForce: 500
   GroundChecker: {fileID: 0}
   GroundedLayer:
     serializedVersion: 2
@@ -5255,7 +5411,7 @@ Transform:
   - {fileID: 922376792}
   - {fileID: 1623598785}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &770338919
 BoxCollider:
@@ -5276,7 +5432,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-195748
+  m_Name: pb_Mesh67362
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -6129,7 +6285,7 @@ GameObject:
   - component: {fileID: 795785517}
   m_Layer: 9
   m_Name: RampFlat
-  m_TagString: Untagged
+  m_TagString: Wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7983,10 +8139,12 @@ MonoBehaviour:
   rb: {fileID: 0}
   CharacterSheetScript: {fileID: 1043930587}
   TricksControllerScript: {fileID: 0}
+  TimeManagerScript: {fileID: 0}
+  BoardCollider: {fileID: 0}
   direction: 1
+  CurrentSurface: 
   IsGrounded: 0
   IsOnRail: 0
-  AttractionForce: 500
   GroundChecker: {fileID: 0}
   GroundedLayer:
     serializedVersion: 2
@@ -8053,7 +8211,7 @@ Transform:
   - {fileID: 1967923843}
   - {fileID: 901279711}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1043930590
 Animator:
@@ -8558,7 +8716,7 @@ Transform:
   m_LocalScale: {x: 0.8, y: 0.1, z: 0.2}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1089047683
 GameObject:
@@ -8645,7 +8803,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-273560
+  m_Name: pb_Mesh19452
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -8919,7 +9077,7 @@ Transform:
   - {fileID: 1273990564}
   - {fileID: 156219161}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1158322398
 GameObject:
@@ -9320,9 +9478,8 @@ GameObject:
   - component: {fileID: 1206174866}
   - component: {fileID: 1206174869}
   - component: {fileID: 1206174868}
-  - component: {fileID: 1206174867}
   m_Layer: 10
-  m_Name: Rails
+  m_Name: Rails 1
   m_TagString: Rail
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9335,7 +9492,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1206174865}
-  m_LocalRotation: {x: 0, y: 0, z: -0.10886683, w: 0.9940564}
+  m_LocalRotation: {x: -0, y: -0, z: -0.10886683, w: 0.9940564}
   m_LocalPosition: {x: 43.51, y: -0.72, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -9346,18 +9503,6 @@ Transform:
   m_Father: {fileID: 1504340885}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -12.5}
---- !u!114 &1206174867
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1206174865}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd16f959bf49a438fbcb5d95ec541cd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1206174868
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9369,8 +9514,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 9.77, y: 0.2, z: 1}
-  m_Center: {x: 2.85, y: 0.65, z: 0}
+  m_Size: {x: 7.8, y: 0.2, z: 1}
+  m_Center: {x: 1.84, y: 0.65, z: 0}
 --- !u!136 &1206174869
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -9478,7 +9623,7 @@ GameObject:
   - component: {fileID: 1242787012}
   m_Layer: 9
   m_Name: WallRide
-  m_TagString: Untagged
+  m_TagString: Wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10240,10 +10385,12 @@ MonoBehaviour:
   rb: {fileID: 0}
   CharacterSheetScript: {fileID: 1329010935}
   TricksControllerScript: {fileID: 0}
+  TimeManagerScript: {fileID: 0}
+  BoardCollider: {fileID: 0}
   direction: 1
+  CurrentSurface: 
   IsGrounded: 0
   IsOnRail: 0
-  AttractionForce: 500
   GroundChecker: {fileID: 0}
   GroundedLayer:
     serializedVersion: 2
@@ -10368,7 +10515,7 @@ Transform:
   - {fileID: 1020368949}
   - {fileID: 1012822478}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1356488527
 GameObject:
@@ -11278,7 +11425,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1460786295
 Transform:
   m_ObjectHideFlags: 0
@@ -11297,7 +11444,7 @@ Transform:
   - {fileID: 194556926}
   - {fileID: 1952175838}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1466531349
 GameObject:
@@ -11443,7 +11590,7 @@ GameObject:
   - component: {fileID: 1492122476}
   m_Layer: 9
   m_Name: RampFlat
-  m_TagString: Untagged
+  m_TagString: Wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11753,7 +11900,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1504340885
 Transform:
   m_ObjectHideFlags: 0
@@ -11781,7 +11928,7 @@ Transform:
   - {fileID: 482815986}
   - {fileID: 238615520}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1505521854
 GameObject:
@@ -11940,10 +12087,12 @@ MonoBehaviour:
   rb: {fileID: 1536765455}
   CharacterSheetScript: {fileID: 1536765454}
   TricksControllerScript: {fileID: 409511115}
+  TimeManagerScript: {fileID: 0}
+  BoardCollider: {fileID: 0}
   direction: 1
+  CurrentSurface: 
   IsGrounded: 0
   IsOnRail: 0
-  AttractionForce: 500
   GroundChecker: {fileID: 0}
   GroundedLayer:
     serializedVersion: 2
@@ -12070,7 +12219,7 @@ Transform:
   - {fileID: 409511119}
   - {fileID: 1430313400}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1536765460
 MonoBehaviour:
@@ -12437,7 +12586,7 @@ GameObject:
   - component: {fileID: 1579595494}
   m_Layer: 9
   m_Name: RampFlat
-  m_TagString: Untagged
+  m_TagString: Wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13521,7 +13670,7 @@ GameObject:
   - component: {fileID: 1777474944}
   m_Layer: 9
   m_Name: RampFlat (3)
-  m_TagString: Untagged
+  m_TagString: Wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13736,7 +13885,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &1803111148
 GameObject:
@@ -14905,7 +15054,7 @@ GameObject:
   - component: {fileID: 1912523699}
   m_Layer: 8
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Concrete
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -18010,7 +18159,7 @@ GameObject:
   - component: {fileID: 2090657029}
   m_Layer: 9
   m_Name: FunboxTrapeze
-  m_TagString: Untagged
+  m_TagString: Wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

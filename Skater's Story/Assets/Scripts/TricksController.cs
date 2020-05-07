@@ -42,9 +42,6 @@ public class TricksController : MonoBehaviour {
     private bool directionPressed = false;
     private bool modifierPressed = false;
 
-    private bool squarePressed = false;
-    private bool trianglePressed = false;
-
     // REWIRED
     private bool SquareButton = false;
     private bool TriangleButton = false;
@@ -242,6 +239,7 @@ public class TricksController : MonoBehaviour {
         StartCoroutine(EraseTrickName(eraseTrickNameTimeFail));
 
         SkateboardAnim.SetTrigger("Bail");
+        AudioManager.instance.Play("Bail");
     }
 
 

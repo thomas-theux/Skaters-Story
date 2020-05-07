@@ -12,6 +12,9 @@ public class SkateboardController : MonoBehaviour {
     public Rigidbody rb;
     public CharacterSheet CharacterSheetScript;
     public TricksController TricksControllerScript;
+    public TimeManager TimeManagerScript;
+
+    public SphereCollider BoardCollider;
 
     // private float slowMotionSpeed = 0.8f;
     // private bool timeIsSlowedDown = false;
@@ -29,6 +32,15 @@ public class SkateboardController : MonoBehaviour {
     private float alignSpeed = 10.0f;
     private bool aligning = false;
 
+    public string CurrentSurface = "";
+
+    private bool playedRollingSound = false;
+    private bool playedLandingSound = false;
+    private bool playedGrindingSound = false;
+
+    private string rollingSoundName = "";
+    private string grindingSoundName = "";
+
     // Ollie multiplier depending on current speed
     private float ollieMultiplierMin = 0.5f;
     private float ollieMultiplierMax = 1.0f;
@@ -40,7 +52,7 @@ public class SkateboardController : MonoBehaviour {
 
     public Transform GroundChecker;
 
-    private float GroundDistance = 0.025f;
+    private float GroundDistance = 0.05f;
     private float RailDistance = 0.1f;
 
     [SerializeField] public LayerMask GroundedLayer;
@@ -54,8 +66,10 @@ public class SkateboardController : MonoBehaviour {
 
     // REWIRED
     private float horizontalAxis;
+    private float horizontalMovement;
+    private float XButtonDown;
 
-    private bool XButton = false;
+    private bool XButtonUp = false;
     private bool OptionsButton = false;
 
 
@@ -81,13 +95,14 @@ public class SkateboardController : MonoBehaviour {
 
         CheckDirection();
         CheckIfGrounded();
+        CheckSurface();
         AlignToSurface();
 
         //////////////////////////////////////////////////////////////////////////////////////
 
         if (OptionsButton) CheckpointRespawn();
         
-        if (XButton) {
+        if (XButtonUp) {
             if (IsGrounded || IsOnRail) {
                 ApplyOllieForce();
             }
@@ -97,6 +112,12 @@ public class SkateboardController : MonoBehaviour {
 
         currentBoardSpeed = rb.velocity.magnitude;
         BoardSpeedText.text = currentBoardSpeed.ToString("F1");
+
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        PlayRollingSound();
+        PlayLandingSound();
+        PlayGrindingSound();
 
         //////////////////////////////////////////////////////////////////////////////////////
 
@@ -116,16 +137,19 @@ public class SkateboardController : MonoBehaviour {
 
 
     private void FixedUpdate() {
-        // rb.AddRelativeForce(horizontalAxis * maxBoardSpeed, 0, 0);
-        // rb.AddRelativeForce(0, 0, horizontalAxis * maxBoardSpeed);
+        // if (!TricksControllerScript.IsBailing) {
+        //     if (IsGrounded) {
+        //         rb.AddForce(transform.right * horizontalAxis * maxBoardSpeed);
+        //     } else {
+        //         rb.AddForce(horizontalAxis * maxBoardSpeed, 0, 0);
+        //     }
+        // }
 
-        // rb.AddForce(transform.forward * horizontalAxis * maxBoardSpeed);
         if (!TricksControllerScript.IsBailing) {
-            // rb.AddForce(horizontalAxis * maxBoardSpeed, 0, 0);
             if (IsGrounded) {
-                rb.AddForce(transform.right * horizontalAxis * maxBoardSpeed);
+                rb.AddForce(transform.right * horizontalMovement * maxBoardSpeed);
             } else {
-                rb.AddForce(horizontalAxis * maxBoardSpeed, 0, 0);
+                rb.AddForce(horizontalMovement * maxBoardSpeed, 0, 0);
             }
         }
     }
@@ -133,39 +157,43 @@ public class SkateboardController : MonoBehaviour {
 
     private void GetInput() {
         // Only be able to move the skater when he's not bailing or when he's grounded
-        if (!TricksControllerScript.IsBailing) {
-            if (IsGrounded) {
-                horizontalAxis = player.GetAxis("Horizontal");
-            }
-
-            XButton = player.GetButtonDown("X");
+        if (GameSettings.ClassicControls) {
+            ClassicControls();
+        } else if (!GameSettings.ClassicControls) {
+            NewControls();
         }
 
         OptionsButton = player.GetButtonUp("Options");
     }
 
 
-    private void CheckIfGrounded() {
-        IsGrounded = Physics.CheckSphere(GroundChecker.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore);
+    // New controls: Shoulder buttons to roll left or right
+    private void NewControls() {
+        if (!TricksControllerScript.IsBailing) {
+            horizontalAxis = player.GetAxis("Horizontal Shoulder");
+            XButtonUp = player.GetButtonDown("X");
 
-        IsOnRail = Physics.CheckSphere(GroundChecker.position, RailDistance, RailLayer, QueryTriggerInteraction.Ignore);
-        TricksControllerScript.SkateboardAnim.SetBool("Can Grind", IsOnRail);
+            if (IsGrounded) {
+                horizontalMovement = horizontalAxis;
+            }
+        }
     }
 
 
-    private void AlignToSurface() {
-        Ray ray = new Ray(transform.position, -transform.up);
-        RaycastHit hit;
-
-        if(Physics.Raycast(ray, out hit, raycastDistance) == true) {
-            rotCur = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
-            aligning = true;
-        } else {
-            aligning = false;
-        }
-
-        if (aligning) {
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotCur, Time.deltaTime * alignSpeed);
+    // Classic THPS controls: Press X to push and left/right to brake
+    private void ClassicControls() {
+        if (!TricksControllerScript.IsBailing) {
+            horizontalAxis = player.GetAxis("Horizontal DPad");
+            XButtonUp = player.GetButtonUp("X");
+            XButtonDown = player.GetAxis("XDown");
+            
+            if (IsGrounded) {
+                if (horizontalAxis != 0) {
+                    horizontalMovement = horizontalAxis;
+                } else {
+                    horizontalMovement = XButtonDown * direction;
+                }
+            }
         }
     }
 
@@ -179,6 +207,7 @@ public class SkateboardController : MonoBehaviour {
 
             if (!directionSwitchR) {
                 TricksControllerScript.SkateboardAnim.SetTrigger("Turn Right");
+                AudioManager.instance.Play("Switch Direction");
                 directionSwitchR = true;
             }
 
@@ -190,6 +219,7 @@ public class SkateboardController : MonoBehaviour {
 
             if (!directionSwitchL) {
                 TricksControllerScript.SkateboardAnim.SetTrigger("Turn Left");
+                AudioManager.instance.Play("Switch Direction");
                 directionSwitchL = true;
             }
 
@@ -197,8 +227,50 @@ public class SkateboardController : MonoBehaviour {
     }
 
 
+    private void CheckIfGrounded() {
+        IsGrounded = Physics.CheckSphere(GroundChecker.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore);
+
+        IsOnRail = Physics.CheckSphere(GroundChecker.position, RailDistance, RailLayer, QueryTriggerInteraction.Ignore);
+        TricksControllerScript.SkateboardAnim.SetBool("Can Grind", IsOnRail);
+    }
+
+
+    private void CheckSurface() {
+        Ray ray = new Ray(transform.position, -transform.up);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 0.25f) == true) {
+            CurrentSurface = hit.collider.tag;
+        }
+
+        // switch (rayHit.collider.tag) {
+        //     case "Concrete":
+        //         break;
+        //     case "Wood":
+        //         break;
+        // }
+    }
+
+
+    private void AlignToSurface() {
+        Ray ray = new Ray(transform.position, -transform.up);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, raycastDistance) == true) {
+            rotCur = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
+            aligning = true;
+        } else {
+            aligning = false;
+        }
+
+        if (aligning) {
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotCur, Time.deltaTime * alignSpeed);
+        }
+    }
+
+
     private void ApplyOllieForce() {
-        TricksControllerScript.SkateboardAnim.SetTrigger("Ollie");
+        AudioManager.instance.Play("Ollie");
 
         float ollieForceMultiplier = MapSpeed();
         float calculatedOllieForce = ollieForce * ollieForceMultiplier;
@@ -223,7 +295,7 @@ public class SkateboardController : MonoBehaviour {
 
 
     public void CheckpointRespawn() {
-        horizontalAxis = 0;
+        horizontalMovement = 0;
         rb.velocity = Vector3.zero;
 
         float respawnPosX = 0f;
@@ -240,7 +312,7 @@ public class SkateboardController : MonoBehaviour {
 
 
     public void RespawnAfterBail() {
-        horizontalAxis = 0;
+        horizontalMovement = 0;
         rb.velocity = Vector3.zero;
 
         float respawnPosX = this.transform.position.x;
@@ -250,20 +322,57 @@ public class SkateboardController : MonoBehaviour {
     }
 
 
-    // private void OnTriggerEnter(Collider other) {
-    //     if (other.tag == "Rail") {
-    //         CanGrind = true;
-    //         TricksControllerScript.SkateboardAnim.SetBool("Can Grind", true);
-    //     }
-    // }
+    private void PlayRollingSound() {
+        if (IsGrounded) {
+            if (currentBoardSpeed > 0.1f) {
+                if (!playedRollingSound) {
+                    playedRollingSound = true;
+                    rollingSoundName = "Rolling " + CurrentSurface;
+                    AudioManager.instance.Play(rollingSoundName);
+                }
+            } else {
+                if (playedRollingSound) {
+                    playedRollingSound = false;
+                    AudioManager.instance.Stop(rollingSoundName);
+                }
+            }
+        } else {
+            if (playedRollingSound) {
+                playedRollingSound = false;
+                AudioManager.instance.Stop(rollingSoundName);
+            }
+        }
+    }
 
 
-    // private void OnTriggerExit(Collider other) {
-    //     if (other.tag == "Rail") {
-    //         CanGrind = false;
-    //         TricksControllerScript.SkateboardAnim.SetBool("Can Grind", false);
-    //     }
-    // }
+    private void PlayLandingSound() {
+        if (IsGrounded || IsOnRail) {
+            if (!playedLandingSound) {
+                playedLandingSound = true;
+                AudioManager.instance.Play("Land " + CurrentSurface);
+            }
+        } else if (!IsGrounded) {
+            if (playedLandingSound) {
+                playedLandingSound = false;
+            }
+        }
+    }
+
+
+    private void PlayGrindingSound() {
+        if (IsOnRail) {
+            if (!playedGrindingSound) {
+                playedGrindingSound = true;
+                grindingSoundName = "Grind " + CurrentSurface;
+                AudioManager.instance.Play(grindingSoundName);
+            }
+        } else {
+            if (playedGrindingSound) {
+                playedGrindingSound = false;
+                AudioManager.instance.Stop(grindingSoundName);
+            }
+        }
+    }
 
 
     protected void LateUpdate() {
