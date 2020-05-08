@@ -7,6 +7,7 @@ using Rewired;
 public class TricksController : MonoBehaviour {
 
     public SkateboardController SkateboardControllerScript;
+    public TimeManager TimeManagerScript;
     public Animator SkateboardAnim;
     private Player player;
 
@@ -177,6 +178,10 @@ public class TricksController : MonoBehaviour {
 
         List<FlipTricks> whichDirection = TricksManager.FlipTricksArr[getDirBtn];
         FlipTricks whichFlipTrick = whichDirection[TricksManager.FlipTricksLevel[getDirBtn]];
+
+        if (GameSettings.SlowMotionTricks == 2) {
+            TimeManagerScript.DoSlowmotion();
+        }
 
         whichFlipTrick.PlayAnimation(SkateboardAnim);
 

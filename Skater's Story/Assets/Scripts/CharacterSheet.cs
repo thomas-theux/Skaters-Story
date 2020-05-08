@@ -10,11 +10,10 @@ public class CharacterSheet : MonoBehaviour {
     public TMP_Text CurrentLevelText;
     public TMP_Text CurrentRespectText;
 
-    public float StatOllie = 200.0f;        // Max ollie probably shouldn't be over 220
-    public float StatSpeed = 6.0f;          // Max speed probably shouldn't be over 8
-    public float StatFlip = 6.0f;
-    public float StatGrind = 6.0f;
-    public float StatManual = 6.0f;
+    public float StatOllie = 200.0f;            // Max ollie probably shouldn't be over 220
+    public float StatSpeed = 6.0f;              // Max speed probably shouldn't be over 8
+    public float StatFlip = 6.0f;               // Swiftness: how fast you perform flip tricks
+    public float StatBalance = 6.0f;            // Stat for balancing grinds and manuals
 
     public int SkaterLevel = 1;
 
@@ -23,7 +22,7 @@ public class CharacterSheet : MonoBehaviour {
     private float RespectNeededToLevelUp = 100;
     private float RespectNeededLastLevel = 0;
 
-    private float exponent = 1.5f;
+    private float exponent = 1.75f;
     private float baseRespect = 100.0f;
 
     private float newRespectValue = 0.0f;

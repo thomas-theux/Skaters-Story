@@ -12,7 +12,6 @@ public class SkateboardController : MonoBehaviour {
     public Rigidbody rb;
     public CharacterSheet CharacterSheetScript;
     public TricksController TricksControllerScript;
-    public TimeManager TimeManagerScript;
 
     public SphereCollider BoardCollider;
 
@@ -275,8 +274,11 @@ public class SkateboardController : MonoBehaviour {
         float ollieForceMultiplier = MapSpeed();
         float calculatedOllieForce = ollieForce * ollieForceMultiplier;
 
-        Vector3 newOllieForce = new Vector3(0f, calculatedOllieForce, 0f);
-        rb.AddForce(newOllieForce);
+        // Vector3 newOllieForce = new Vector3(0f, calculatedOllieForce, 0f);
+        // rb.AddForce(newOllieForce);
+
+        Vector3 newOllieForce = new Vector3(rb.velocity.x, calculatedOllieForce, rb.velocity.z);
+        rb.velocity = newOllieForce;
     }
 
 
