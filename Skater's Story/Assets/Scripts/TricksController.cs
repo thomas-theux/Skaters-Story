@@ -195,15 +195,15 @@ public class TricksController : MonoBehaviour {
         PerformsGrindTrick = true;
 
         List<GrindTricks> whichDirection = TricksManager.GrindTricksArr[getDirBtn];
-        GrindTricks whichFlipTrick = whichDirection[TricksManager.GrindTricksLevel[getDirBtn]];
+        GrindTricks whichGrindTrick = whichDirection[TricksManager.GrindTricksLevel[getDirBtn]];
 
         // SkateboardControllerScript.rb.useGravity = false;
         // SkateboardControllerScript.rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
-        whichFlipTrick.PlayAnimation(SkateboardAnim);
+        whichGrindTrick.PlayAnimation(SkateboardAnim);
 
-        respectForTrick = whichFlipTrick.respectGain;
-        performedTrickName = whichFlipTrick.trickName;
+        respectForTrick = whichGrindTrick.respectGain;
+        performedTrickName = whichGrindTrick.trickName;
     }
 
 

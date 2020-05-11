@@ -11,14 +11,15 @@ public class SkateboardController : MonoBehaviour {
 
     public Rigidbody rb;
     public CharacterSheet CharacterSheetScript;
-    public TricksController TricksControllerScript;
+    // public TricksController TricksControllerScript;
+    public TricksHandler TricksHandlerScript;
 
     public SphereCollider BoardCollider;
 
     // private float slowMotionSpeed = 0.8f;
     // private bool timeIsSlowedDown = false;
 
-    public int direction = 1;
+    public int Direction = 1;
     private bool directionSwitchR = false;
     private bool directionSwitchL = false;
 
@@ -120,18 +121,14 @@ public class SkateboardController : MonoBehaviour {
 
         //////////////////////////////////////////////////////////////////////////////////////
 
-        // Slow down time when jumping
-        // if (!IsGrounded) {
-        //     if (!timeIsSlowedDown) {
-        //         timeIsSlowedDown = true;
-        //         Time.timeScale = slowMotionSpeed;
-        //     }
-        // } else {
-        //     if (timeIsSlowedDown) {
-        //         timeIsSlowedDown = false;
-        //         Time.timeScale = 1.0f;
-        //     }
-        // }
+        // Only stop manualing when skater is in the air
+        if (!IsGrounded) {
+            if (TricksHandlerScript.PerformsManual) {
+                TricksHandlerScript.PerformsManual = false;
+                TricksHandlerScript.SkateboardAnim.SetBool("Can Manual", false);
+                TricksHandlerScript.TrickDone();
+            }
+        }
     }
 
 
@@ -144,7 +141,7 @@ public class SkateboardController : MonoBehaviour {
         //     }
         // }
 
-        if (!TricksControllerScript.IsBailing) {
+        if (!TricksHandlerScript.IsBailing) {
             if (IsGrounded) {
                 rb.AddForce(transform.right * horizontalMovement * maxBoardSpeed);
             } else {
@@ -168,7 +165,7 @@ public class SkateboardController : MonoBehaviour {
 
     // New controls: Shoulder buttons to roll left or right
     private void NewControls() {
-        if (!TricksControllerScript.IsBailing) {
+        if (!TricksHandlerScript.IsBailing) {
             horizontalAxis = player.GetAxis("Horizontal Shoulder");
             XButtonUp = player.GetButtonDown("X");
 
@@ -181,7 +178,7 @@ public class SkateboardController : MonoBehaviour {
 
     // Classic THPS controls: Press X to push and left/right to brake
     private void ClassicControls() {
-        if (!TricksControllerScript.IsBailing) {
+        if (!TricksHandlerScript.IsBailing) {
             horizontalAxis = player.GetAxis("Horizontal DPad");
             XButtonUp = player.GetButtonUp("X");
             XButtonDown = player.GetAxis("XDown");
@@ -190,7 +187,7 @@ public class SkateboardController : MonoBehaviour {
                 if (horizontalAxis != 0) {
                     horizontalMovement = horizontalAxis;
                 } else {
-                    horizontalMovement = XButtonDown * direction;
+                    horizontalMovement = XButtonDown * Direction;
                 }
             }
         }
@@ -200,24 +197,24 @@ public class SkateboardController : MonoBehaviour {
     private void CheckDirection() {
         if (rb.velocity.x > 0) {
 
-            direction = 1;
+            Direction = 1;
 
             if (directionSwitchL) directionSwitchL = false;
 
             if (!directionSwitchR) {
-                TricksControllerScript.SkateboardAnim.SetTrigger("Turn Right");
+                TricksHandlerScript.SkateboardAnim.SetTrigger("Turn Right");
                 AudioManager.instance.Play("Switch Direction");
                 directionSwitchR = true;
             }
 
         } else if (rb.velocity.x < 0) {
 
-            direction = -1;
+            Direction = -1;
 
             if (directionSwitchR) directionSwitchR = false;
 
             if (!directionSwitchL) {
-                TricksControllerScript.SkateboardAnim.SetTrigger("Turn Left");
+                TricksHandlerScript.SkateboardAnim.SetTrigger("Turn Left");
                 AudioManager.instance.Play("Switch Direction");
                 directionSwitchL = true;
             }
@@ -230,7 +227,7 @@ public class SkateboardController : MonoBehaviour {
         IsGrounded = Physics.CheckSphere(GroundChecker.position, GroundDistance, GroundedLayer, QueryTriggerInteraction.Ignore);
 
         IsOnRail = Physics.CheckSphere(GroundChecker.position, RailDistance, RailLayer, QueryTriggerInteraction.Ignore);
-        TricksControllerScript.SkateboardAnim.SetBool("Can Grind", IsOnRail);
+        TricksHandlerScript.SkateboardAnim.SetBool("Can Grind", IsOnRail);
     }
 
 
@@ -271,6 +268,13 @@ public class SkateboardController : MonoBehaviour {
     private void ApplyOllieForce() {
         AudioManager.instance.Play("Ollie");
 
+        // // If the skater performs a manual stop the manual
+        // if (TricksHandlerScript.PerformsManual) {
+        //     TricksHandlerScript.PerformsManual = false;
+        //     TricksHandlerScript.SkateboardAnim.SetBool("Can Manual", false);
+        //     TricksHandlerScript.TrickDone();
+        // }
+
         float ollieForceMultiplier = MapSpeed();
         float calculatedOllieForce = ollieForce * ollieForceMultiplier;
 
@@ -302,9 +306,9 @@ public class SkateboardController : MonoBehaviour {
 
         float respawnPosX = 0f;
 
-        if (direction == 1) {
+        if (Direction == 1) {
             respawnPosX = this.transform.position.x - 2.0f;
-        } else if (direction == -1) {
+        } else if (Direction == -1) {
             respawnPosX = this.transform.position.x + 2.0f;
         }
 

@@ -34,6 +34,17 @@ public class TricksManager : MonoBehaviour {
 
     public static List<List<GrindTricks>> GrindTricksArr = new List<List<GrindTricks>>();
 
+    //////////////////////////////////////////////////////////////////////////////////////
+
+    public static int[] ManualTricksLevel = {0, 0, 0, 0};
+
+    public static List<ManualTricks> ManualTricksLeftArr = new List<ManualTricks>();
+    public static List<ManualTricks> ManualTricksUpArr = new List<ManualTricks>();
+    public static List<ManualTricks> ManualTricksRightArr = new List<ManualTricks>();
+    public static List<ManualTricks> ManualTricksDownArr = new List<ManualTricks>();
+
+    public static List<List<ManualTricks>> ManualTricksArr = new List<List<ManualTricks>>();
+
 
 
     private void Awake() {
@@ -82,6 +93,21 @@ public class TricksManager : MonoBehaviour {
         GrindTricksArr.Add(GrindTricksRightArr);
         GrindTricksArr.Add(GrindTricksDownArr);
         GrindTricksArr.Add(GrindTricksNoDirArr);
+
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        ManualTricksLeftArr.Add(new Casper());
+
+        ManualTricksUpArr.Add(new Manual());
+
+        ManualTricksRightArr.Add(new Primo());
+
+        ManualTricksDownArr.Add(new NoseManual());
+
+        ManualTricksArr.Add(ManualTricksLeftArr);
+        ManualTricksArr.Add(ManualTricksUpArr);
+        ManualTricksArr.Add(ManualTricksRightArr);
+        ManualTricksArr.Add(ManualTricksDownArr);
     }
 
 }
