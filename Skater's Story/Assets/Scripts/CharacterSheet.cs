@@ -14,8 +14,13 @@ public class CharacterSheet : MonoBehaviour {
     public float StatSpeed = 6.0f;              // Max speed probably shouldn't be over 8
     public float StatFlip = 6.0f;               // Swiftness: how fast you perform flip tricks
     public float StatBalance = 6.0f;            // Stat for balancing grinds and manuals
+    public float StatCharisma = 1.0f;           // The multiplier for respect when performing tricks
 
     public int SkaterLevel = 1;
+
+    public int[] FlipTricksLevel = {0, 0, 0, 0, 0};
+    public int[] GrindTricksLevel = {0, 0, 0, 0, 0};
+    public int[] ManualTricksLevel = {0, 0, 0, 0};
 
     public float CurrentRespectValue = 0;
     public float NewRespectValue = 0;
@@ -23,7 +28,7 @@ public class CharacterSheet : MonoBehaviour {
     private float RespectNeededLastLevel = 0;
 
     private float exponent = 1.75f;
-    private float baseRespect = 100.0f;
+    private float baseRespect = 1000.0f;
 
     private float newRespectValue = 0.0f;
     private float currentVelocity = 0.0f;

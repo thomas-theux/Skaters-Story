@@ -2428,7 +2428,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: 80}
   m_SizeDelta: {x: 900, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &237129055
@@ -2485,7 +2485,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 1026
+  m_textAlignment: 258
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -3673,6 +3673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SkateboardControllerScript: {fileID: 1536765453}
+  CharacterSheetScript: {fileID: 0}
   TimeManagerScript: {fileID: 0}
   SkateboardAnim: {fileID: 409511116}
   TrickPoints: {fileID: 789627413}
@@ -4251,7 +4252,11 @@ MonoBehaviour:
   StatSpeed: 6
   StatFlip: 6
   StatBalance: 6
+  StatCharisma: 1
   SkaterLevel: 1
+  FlipTricksLevel: 0000000000000000000000000000000000000000
+  GrindTricksLevel: 0000000000000000010000000000000000000000
+  ManualTricksLevel: 00000000000000000000000000000000
   CurrentRespectValue: 0
   NewRespectValue: 0
   smoothTime: 0.5
@@ -5722,7 +5727,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 658476873}
-  - component: {fileID: 658476872}
   - component: {fileID: 658476871}
   - component: {fileID: 658476870}
   - component: {fileID: 658476869}
@@ -5782,7 +5786,11 @@ MonoBehaviour:
   StatSpeed: 5
   StatFlip: 5
   StatBalance: 6
+  StatCharisma: 1
   SkaterLevel: 1
+  FlipTricksLevel: 0000000000000000000000000000000000000000
+  GrindTricksLevel: 0000000000000000000000000000000000000000
+  ManualTricksLevel: 00000000000000000000000000000000
   CurrentRespectValue: 0
   NewRespectValue: 0
   smoothTime: 0.1
@@ -5816,19 +5824,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.2
   m_Center: {x: 0, y: 0.19, z: 0}
---- !u!65 &658476872
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 658476867}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 0.85, y: 0.24, z: 0.2}
-  m_Center: {x: 0, y: 0.08, z: 0}
 --- !u!4 &658476873
 Transform:
   m_ObjectHideFlags: 0
@@ -6567,7 +6562,11 @@ MonoBehaviour:
   StatSpeed: 5
   StatFlip: 5
   StatBalance: 6
+  StatCharisma: 1
   SkaterLevel: 1
+  FlipTricksLevel: 0000000000000000000000000000000000000000
+  GrindTricksLevel: 0000000000000000010000000000000000000000
+  ManualTricksLevel: 00000000000000000000000000000000
   CurrentRespectValue: 0
   NewRespectValue: 0
   smoothTime: 0.1
@@ -8690,6 +8689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SkateboardControllerScript: {fileID: 770338915}
+  CharacterSheetScript: {fileID: 0}
   TimeManagerScript: {fileID: 0}
   SkateboardAnim: {fileID: 922376794}
   TrickPoints: {fileID: 1765267321}
@@ -9558,6 +9558,18 @@ CapsuleCollider:
   m_Height: 9.77
   m_Direction: 0
   m_Center: {x: 2.85, y: 0.581, z: 0}
+--- !u!114 &1014175400 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4557897972283649396, guid: b2e705fc95c7e4140b9515200daf1873,
+    type: 3}
+  m_PrefabInstance: {fileID: 3360269988147615006}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4115d9604f1584fc7bc79aa9c3f16744, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1020368943
 GameObject:
   m_ObjectHideFlags: 0
@@ -9853,7 +9865,11 @@ MonoBehaviour:
   StatSpeed: 6
   StatFlip: 6
   StatBalance: 6
+  StatCharisma: 1
   SkaterLevel: 1
+  FlipTricksLevel: 0000000000000000000000000000000000000000
+  GrindTricksLevel: 0000000000000000010000000000000000000000
+  ManualTricksLevel: 00000000000000000000000000000000
   CurrentRespectValue: 0
   NewRespectValue: 0
   smoothTime: 0.5
@@ -10104,7 +10120,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 140}
+  m_AnchoredPosition: {x: 0, y: 180}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1059477988
@@ -10168,7 +10184,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_firstOverflowCharacterIndex: -1
@@ -11587,12 +11603,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SkateboardControllerScript: {fileID: 658476868}
-  TimeManagerScript: {fileID: 0}
+  CharacterSheetScript: {fileID: 658476869}
+  TimeManagerScript: {fileID: 1014175400}
   SkateboardAnim: {fileID: 1252161213}
+  TrickPoints: {fileID: 1059477988}
   TrickName: {fileID: 237129055}
   PerformsTrick: 0
   PerformsManual: 0
+  PerformsGrind: 0
   IsBailing: 0
+  respectForTrick: 0
   GainRespect: 0
   SquareButtonPressed: 0
   TriangleButtonPressed: 0
@@ -12178,7 +12198,11 @@ MonoBehaviour:
   StatSpeed: 10
   StatFlip: 10
   StatBalance: 6
+  StatCharisma: 1
   SkaterLevel: 1
+  FlipTricksLevel: 0000000000000000000000000000000000000000
+  GrindTricksLevel: 0000000000000000010000000000000000000000
+  ManualTricksLevel: 00000000000000000000000000000000
   CurrentRespectValue: 0
   NewRespectValue: 0
   smoothTime: 0.5
@@ -13878,7 +13902,11 @@ MonoBehaviour:
   StatSpeed: 5
   StatFlip: 5
   StatBalance: 6
+  StatCharisma: 1
   SkaterLevel: 1
+  FlipTricksLevel: 0000000000000000000000000000000000000000
+  GrindTricksLevel: 0000000000000000010000000000000000000000
+  ManualTricksLevel: 00000000000000000000000000000000
   CurrentRespectValue: 0
   NewRespectValue: 0
   smoothTime: 0.1
@@ -20506,6 +20534,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360269987779028013, guid: b2e705fc95c7e4140b9515200daf1873,
+        type: 3}
+      propertyPath: SlowMotion
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2e705fc95c7e4140b9515200daf1873, type: 3}

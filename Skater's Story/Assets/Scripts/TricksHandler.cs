@@ -7,31 +7,50 @@ using Rewired;
 public class TricksHandler : MonoBehaviour {
 
     public SkateboardController SkateboardControllerScript;
+    public CharacterSheet CharacterSheetScript;
     public TimeManager TimeManagerScript;
     public Animator SkateboardAnim;
     private Player player;
 
+    public TMP_Text TrickPoints;
     public TMP_Text TrickName;
 
     public bool PerformsTrick = false;
     public bool PerformsManual = false;
+    public bool PerformsGrind = false;
     public bool IsBailing = false;
 
     private int performedTricks = 0;
     private int tricksArrLimit = 2;
-    private List<string> performedTricksArr = new List<string>();
 
-    private int respectForTrick = 0;
+    private List<string> allTricksNamesArr = new List<string>();
+    private int maxTrickNames = 10;
+
+    public float respectForTrick = 0;
+    private int respectIncrease = 0;
+    private float increaseDelayDef = 0.2f;
+    private float increaseDelayTimer = 0;
     public int GainRespect = 0;
 
     private float eraseTrickNameTimeFail = 0.2f;
     private float eraseTrickNameTimeSuccess = 1.5f;
 
-    private float resetDelayTime = 0.3f;
+    private float resetDelayTime = 0.2f;
+    private float simpleTrickTimer = 0.05f;
+    private float grindTimer = 0;
+    private float flipTimer = 0;
 
     // Definition for tricks combination values
-    // -1 = no direction; 0 = left; 1 = up; 2 = right; 3 = down
+    // 0 = left; 1 = up; 2 = right; 3 = down; 4 = no direction
     // 0 = !IsGrounded; 1 = CanGrind; 2 = IsGrounded
+
+    private enum directionsEnum {
+        Left = 0,
+        Up = 1,
+        Right = 2,
+        Down = 3,
+        NoDir = 4
+    }
 
     private List<TrickCombination> trickCombinationsArr = new List<TrickCombination>();
 
@@ -76,6 +95,8 @@ public class TricksHandler : MonoBehaviour {
         CheckForCombination();
 
         StartPerforming();
+        ContinuousRespectGain();
+        DisplayTrickPoints();
         AwardOrBail();
     }
 
@@ -149,85 +170,53 @@ public class TricksHandler : MonoBehaviour {
             // FLIP TRICKS
             ///////////////////////////
 
-            if (SquareButtonPressed && DPadLeftPressed) {
-                // print("Kickflip");
-                TrickCombination newCombination = new TrickCombination(0, 0);
-                trickCombinationsArr.Add(newCombination);
-                ResetButtons();
-            }
+            if (SquareButtonPressed) {
+                if (!DPadLeftPressed && !DPadUpPressed && !DPadRightPressed && !DPadDownPressed) {
+                    flipTimer += Time.deltaTime;
 
-            if (SquareButtonPressed && DPadUpPressed) {
-                // print("360 Flip");
-                TrickCombination newCombination = new TrickCombination(1, 0);
-                trickCombinationsArr.Add(newCombination);
-                ResetButtons();
-            }
+                    if (flipTimer >= simpleTrickTimer) AddTrickCombination(directionsEnum.NoDir, 0);
+                }
 
-            if (SquareButtonPressed && DPadRightPressed) {
-                // print("Impossible");
-                TrickCombination newCombination = new TrickCombination(2, 0);
-                trickCombinationsArr.Add(newCombination);
-                ResetButtons();
+                else if (DPadLeftPressed) AddTrickCombination(directionsEnum.Left, 0);
+                else if (DPadUpPressed) AddTrickCombination(directionsEnum.Up, 0);
+                else if (DPadRightPressed) AddTrickCombination(directionsEnum.Right, 0);
+                else if (DPadDownPressed) AddTrickCombination(directionsEnum.Down, 0);
             }
-
-            if (SquareButtonPressed && DPadDownPressed) {
-                // print("Hardflip");
-                TrickCombination newCombination = new TrickCombination(3, 0);
-                trickCombinationsArr.Add(newCombination);
-                ResetButtons();
-            }
-
+            
             ///////////////////////////
             // GRIND TRICKS
             ///////////////////////////
 
-            // if (TriangleButtonPressed && DPadRightPressed) {
-            //     // print("Nose Grind");
-            //     TrickCombination newCombination = new TrickCombination(1, 1);
-            //     trickCombinationsArr.Add(newCombination);
-            //     ResetButtons();
-            // }
+            if (TriangleButtonPressed) {
+                if (!DPadLeftPressed && !DPadUpPressed && !DPadRightPressed && !DPadDownPressed) {
+                    grindTimer += Time.deltaTime;
 
-            // if (TriangleButtonPressed) {
-            //     // print("Nose Grind");
-            //     TrickCombination newCombination = new TrickCombination(-1, 1);
-            //     trickCombinationsArr.Add(newCombination);
-            //     ResetButtons();
-            // }
+                    if (grindTimer >= simpleTrickTimer) AddTrickCombination(directionsEnum.NoDir, 1);
+                }
+
+                else if (DPadLeftPressed) AddTrickCombination(directionsEnum.Left, 1);
+                else if (DPadUpPressed) AddTrickCombination(directionsEnum.Up, 1);
+                else if (DPadRightPressed) AddTrickCombination(directionsEnum.Right, 1);
+                else if (DPadDownPressed) AddTrickCombination(directionsEnum.Down, 1);
+            }
 
             ///////////////////////////
             // MANUAL TRICKS
             ///////////////////////////
 
-            if (DPadLeftPressed && DPadRightPressed) {
-                // print("Casper");
-                TrickCombination newCombination = new TrickCombination(0, 2);
-                trickCombinationsArr.Add(newCombination);
-                ResetButtons();
-            }
-
-            if (DPadUpPressed && DPadDownPressed) {
-                // print("Manual");
-                TrickCombination newCombination = new TrickCombination(1, 2);
-                trickCombinationsArr.Add(newCombination);
-                ResetButtons();
-            }
-
-            // if (DPadRightPressed && DPadLeftPressed) {
-            //     // print("Primo");
-            //     TrickCombination newCombination = new TrickCombination(2, 2);
-            //     trickCombinationsArr.Add(newCombination);
-            //     ResetButtons();
-            // }
-
-            // if (DPadDownPressed && DPadUpPressed) {
-            //     // print("Nose Manual");
-            //     TrickCombination newCombination = new TrickCombination(3, 2);
-            //     trickCombinationsArr.Add(newCombination);
-            //     ResetButtons();
-            // }
+            // if (DPadLeftPressed && DPadRightPressed) // AddTrickCombination(directionsEnum.Left, 2);
+            if (DPadUpPressed && DPadDownPressed) AddTrickCombination(directionsEnum.Up, 2);
+            if (DPadRightPressed && DPadLeftPressed) AddTrickCombination(directionsEnum.Right, 2);
+            // if (DPadDownPressed && DPadUpPressed) // AddTrickCombination(directionsEnum.Down, 2);
 
         }
+    }
+
+
+    private void AddTrickCombination(directionsEnum identifier, int cond) {
+        TrickCombination newCombination = new TrickCombination((int)identifier, cond);
+        trickCombinationsArr.Add(newCombination);
+        ResetButtons();
     }
 
 
@@ -245,6 +234,9 @@ public class TricksHandler : MonoBehaviour {
     private void StartPerforming() {
         if (!PerformsTrick) {
             if (trickCombinationsArr.Count > 0) {
+                grindTimer = 0;
+                flipTimer = 0;
+
                 int getCond = trickCombinationsArr[0].trickCondition;
 
                 switch (getCond) {
@@ -270,7 +262,7 @@ public class TricksHandler : MonoBehaviour {
         int getTrick = trickCombinationsArr[0].whichTrick;
 
         List<FlipTricks> whichDirection = TricksManager.FlipTricksArr[getTrick];
-        FlipTricks whichFlipTrick = whichDirection[TricksManager.FlipTricksLevel[getTrick]];
+        FlipTricks whichFlipTrick = whichDirection[CharacterSheetScript.FlipTricksLevel[getTrick]];
 
         if (GameSettings.SlowMotionTricks == 2) {
             TimeManagerScript.DoSlowmotion();
@@ -278,7 +270,7 @@ public class TricksHandler : MonoBehaviour {
 
         whichFlipTrick.PlayAnimation(SkateboardAnim);
 
-        respectForTrick = whichFlipTrick.respectGain;
+        respectForTrick = whichFlipTrick.respectGain * CharacterSheetScript.StatCharisma;
         string performedTrickName = whichFlipTrick.trickName;
         
         DisplayTrickName(performedTrickName);
@@ -287,6 +279,20 @@ public class TricksHandler : MonoBehaviour {
     
     private void DoGrindTrick() {
         PerformsTrick = true;
+        PerformsGrind = true;
+
+        int getTrick = trickCombinationsArr[0].whichTrick;
+
+        List<GrindTricks> whichDirection = TricksManager.GrindTricksArr[getTrick];
+        GrindTricks whichGrindTrick = whichDirection[CharacterSheetScript.GrindTricksLevel[getTrick]];
+
+        whichGrindTrick.PlayAnimation(SkateboardAnim);
+
+        respectForTrick = whichGrindTrick.respectGain * CharacterSheetScript.StatCharisma;
+        respectIncrease = whichGrindTrick.respectIncrease;
+        string performedTrickName = whichGrindTrick.trickName;
+        
+        DisplayTrickName(performedTrickName);
     }
 
 
@@ -299,11 +305,12 @@ public class TricksHandler : MonoBehaviour {
         int getTrick = trickCombinationsArr[0].whichTrick;
 
         List<ManualTricks> whichDirection = TricksManager.ManualTricksArr[getTrick];
-        ManualTricks whichManualTrick = whichDirection[TricksManager.ManualTricksLevel[getTrick]];
+        ManualTricks whichManualTrick = whichDirection[CharacterSheetScript.ManualTricksLevel[getTrick]];
 
         whichManualTrick.PlayAnimation(SkateboardAnim);
 
-        respectForTrick = whichManualTrick.respectGain;
+        respectForTrick = whichManualTrick.respectGain * CharacterSheetScript.StatCharisma;
+        respectIncrease = whichManualTrick.respectIncrease;
         string performedTrickName = whichManualTrick.trickName;
         
         DisplayTrickName(performedTrickName);
@@ -313,23 +320,75 @@ public class TricksHandler : MonoBehaviour {
     private void DisplayTrickName(string addTrickName){
         performedTricks++;
 
-        GainRespect += respectForTrick;
-        performedTricksArr.Add(addTrickName);
+        allTricksNamesArr.Add(addTrickName);
 
+        int startIndex = 0;
         string allPerformedTricksText = "";
 
-        for (int i = 0; i < performedTricksArr.Count; i++) {
-            if (i > 0) allPerformedTricksText += " + ";
-            allPerformedTricksText += performedTricksArr[i];
+        if (allTricksNamesArr.Count > maxTrickNames) {
+            startIndex = allTricksNamesArr.Count - maxTrickNames;
         }
+
+        for (int i = startIndex; i < allTricksNamesArr.Count; i++) {
+            if (startIndex != 0) {
+                if (i == startIndex) {
+                    allPerformedTricksText += " ... ";
+                }
+            }
+
+            if (i > 0) allPerformedTricksText += " + ";
+
+            allPerformedTricksText += allTricksNamesArr[i];
+        }
+
+        // string allPerformedTricksText = "";
+
+        // for (int i = 0; i < allTricksNamesArr.Count; i++) {
+        //     if (i > 0) allPerformedTricksText += " + ";
+
+        //     if (allTricksNamesArr.Count > 3) {
+        //         if (i >= allTricksNamesArr.Count - 3) {}
+        //         allPerformedTricksText += allTricksNamesArr[i];
+        //     } else {
+        //         allPerformedTricksText += allTricksNamesArr[i];
+        //     }
+        // }
 
         TrickName.text = allPerformedTricksText;
     }
 
 
+    private void DisplayTrickPoints() {
+        if (PerformsTrick) {
+            // float currentCombo = respectForTrick * CharacterSheetScript.StatCharisma;
+            // TrickPoints.text = currentCombo.ToString("N0");
+            float currentCombo = respectForTrick + GainRespect;
+            TrickPoints.text = currentCombo.ToString("N0") + " x " + performedTricks;
+        }
+    }
+
+
+    private void ContinuousRespectGain() {
+        if (PerformsGrind || PerformsManual) {
+            increaseDelayTimer += Time.deltaTime;
+
+            if (increaseDelayTimer > increaseDelayDef) {
+                respectForTrick += respectIncrease;
+                increaseDelayTimer = 0;
+            }
+        }
+    }
+
+
     public void TrickDone() {
+        // GainRespect += Mathf.RoundToInt(respectForTrick * CharacterSheetScript.StatCharisma);
+        GainRespect += (int)respectForTrick;
+
         trickCombinationsArr.RemoveAt(0);
         PerformsTrick = false;
+
+        respectForTrick = 0;
+        respectIncrease = 0;
     }
 
 
@@ -353,7 +412,7 @@ public class TricksHandler : MonoBehaviour {
 
         GainRespect = 0;
         performedTricks = 0;
-        performedTricksArr.Clear();
+        allTricksNamesArr.Clear();
         trickCombinationsArr.Clear();
 
         // Instantly erase trick names when player bails
@@ -372,12 +431,16 @@ public class TricksHandler : MonoBehaviour {
 
     private void AwardRespect() {
         if (GainRespect > 0) {
-            SkateboardControllerScript.CharacterSheetScript.NewRespectValue += GainRespect;
+            int multipliedRespect = GainRespect * performedTricks;
+
+            SkateboardControllerScript.CharacterSheetScript.NewRespectValue += multipliedRespect;
             SkateboardControllerScript.CharacterSheetScript.IncreasingRespect = true;
+
+            TrickPoints.text = multipliedRespect.ToString("N0");
 
             GainRespect = 0;
             performedTricks = 0;
-            performedTricksArr.Clear();
+            allTricksNamesArr.Clear();
             trickCombinationsArr.Clear();
 
             // Erase trick names after a few seconds
@@ -391,6 +454,7 @@ public class TricksHandler : MonoBehaviour {
         
         if (!PerformsTrick) {
             TrickName.text = "";
+            TrickPoints.text = "";
         }
     }
     

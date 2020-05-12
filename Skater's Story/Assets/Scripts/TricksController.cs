@@ -7,6 +7,7 @@ using Rewired;
 public class TricksController : MonoBehaviour {
 
     public SkateboardController SkateboardControllerScript;
+    public CharacterSheet CharacterSheetScript;
     public TimeManager TimeManagerScript;
     public Animator SkateboardAnim;
     private Player player;
@@ -177,7 +178,7 @@ public class TricksController : MonoBehaviour {
         PerformsFlipTrick = true;
 
         List<FlipTricks> whichDirection = TricksManager.FlipTricksArr[getDirBtn];
-        FlipTricks whichFlipTrick = whichDirection[TricksManager.FlipTricksLevel[getDirBtn]];
+        FlipTricks whichFlipTrick = whichDirection[CharacterSheetScript.FlipTricksLevel[getDirBtn]];
 
         if (GameSettings.SlowMotionTricks == 2) {
             TimeManagerScript.DoSlowmotion();
@@ -195,7 +196,7 @@ public class TricksController : MonoBehaviour {
         PerformsGrindTrick = true;
 
         List<GrindTricks> whichDirection = TricksManager.GrindTricksArr[getDirBtn];
-        GrindTricks whichGrindTrick = whichDirection[TricksManager.GrindTricksLevel[getDirBtn]];
+        GrindTricks whichGrindTrick = whichDirection[CharacterSheetScript.GrindTricksLevel[getDirBtn]];
 
         // SkateboardControllerScript.rb.useGravity = false;
         // SkateboardControllerScript.rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;

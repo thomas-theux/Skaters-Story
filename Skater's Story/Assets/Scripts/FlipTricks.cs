@@ -12,30 +12,6 @@ public class FlipTricks: MonoBehaviour {
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
-public class PopShoveIt: FlipTricks {
-    public PopShoveIt() {
-        this.trickName = "Pop Shove-It";
-        this.respectGain = TricksManager.respectBasic;
-    }
-
-    public override void PlayAnimation(Animator SkateboardAnim) {
-        SkateboardAnim.SetTrigger(this.trickName);
-    }
-}
-
-public class ThreeSixtyShoveIt: FlipTricks {
-    public ThreeSixtyShoveIt() {
-        this.trickName = "360 Shove-It";
-        this.respectGain = TricksManager.respectBasic * TricksManager.LevelUpMultiplier;
-    }
-
-    public override void PlayAnimation(Animator SkateboardAnim) {
-        SkateboardAnim.SetTrigger(this.trickName);
-    }
-}
-
-//////////////////////////////////////////////////////////////////////////////////////
-
 public class Kickflip: FlipTricks {
     public Kickflip() {
         this.trickName = "Kickflip";
@@ -50,7 +26,7 @@ public class Kickflip: FlipTricks {
 public class DoubleKickflip: FlipTricks {
     public DoubleKickflip() {
         this.trickName = "Double Kickflip";
-        this.respectGain = TricksManager.respectBasic * TricksManager.LevelUpMultiplier;
+        this.respectGain = TricksManager.respectBasic * TricksManager.SecondLevelMultiplier;
     }
 
     public override void PlayAnimation(Animator SkateboardAnim) {
@@ -74,7 +50,7 @@ public class ThreeSixtyFlip: FlipTricks {
 public class SevenTwentyFlip: FlipTricks {
     public SevenTwentyFlip() {
         this.trickName = "720 Flip";
-        this.respectGain = TricksManager.respectAdvanced * TricksManager.LevelUpMultiplier;
+        this.respectGain = TricksManager.respectAdvanced * TricksManager.SecondLevelMultiplier;
     }
 
     public override void PlayAnimation(Animator SkateboardAnim) {
@@ -98,7 +74,7 @@ public class Impossible: FlipTricks {
 public class ImpossibleThreeSixty: FlipTricks {
     public ImpossibleThreeSixty() {
         this.trickName = "Impossible 360";
-        this.respectGain = TricksManager.respectBasic * TricksManager.LevelUpMultiplier;
+        this.respectGain = TricksManager.respectBasic * TricksManager.SecondLevelMultiplier;
     }
 
     public override void PlayAnimation(Animator SkateboardAnim) {
@@ -122,7 +98,31 @@ public class Hardflip: FlipTricks {
 public class ThreeSixtyHardflip: FlipTricks {
     public ThreeSixtyHardflip() {
         this.trickName = "360 Hardflip";
-        this.respectGain = TricksManager.respectAdvanced * TricksManager.LevelUpMultiplier;
+        this.respectGain = TricksManager.respectAdvanced * TricksManager.SecondLevelMultiplier;
+    }
+
+    public override void PlayAnimation(Animator SkateboardAnim) {
+        SkateboardAnim.SetTrigger(this.trickName);
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+public class PopShoveIt: FlipTricks {
+    public PopShoveIt() {
+        this.trickName = "Pop Shove-It";
+        this.respectGain = TricksManager.respectBasic;
+    }
+
+    public override void PlayAnimation(Animator SkateboardAnim) {
+        SkateboardAnim.SetTrigger(this.trickName);
+    }
+}
+
+public class ThreeSixtyShoveIt: FlipTricks {
+    public ThreeSixtyShoveIt() {
+        this.trickName = "360 Shove-It";
+        this.respectGain = TricksManager.respectBasic * TricksManager.SecondLevelMultiplier;
     }
 
     public override void PlayAnimation(Animator SkateboardAnim) {

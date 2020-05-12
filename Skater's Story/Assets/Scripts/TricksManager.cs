@@ -8,11 +8,13 @@ public class TricksManager : MonoBehaviour {
     public static int respectAdvanced = 24;
     public static int respectPro = 40;
 
-    public static int LevelUpMultiplier = 4;
+    public static int respectIncrease = 2;
+
+    public static int SecondLevelMultiplier = 4;
 
     //////////////////////////////////////////////////////////////////////////////////////
 
-    public static int[] FlipTricksLevel = {0, 0, 0, 0, 0};
+    // public static int[] FlipTricksLevel = {0, 0, 0, 0, 0};
 
     public static List<FlipTricks> FlipTricksLeftArr = new List<FlipTricks>();
     public static List<FlipTricks> FlipTricksUpArr = new List<FlipTricks>();
@@ -24,7 +26,7 @@ public class TricksManager : MonoBehaviour {
 
     //////////////////////////////////////////////////////////////////////////////////////
 
-    public static int[] GrindTricksLevel = {0, 0, 0, 0, 0};
+    // public static int[] GrindTricksLevel = {0, 0, 0, 0, 0};
 
     public static List<GrindTricks> GrindTricksLeftArr = new List<GrindTricks>();
     public static List<GrindTricks> GrindTricksUpArr = new List<GrindTricks>();
@@ -36,7 +38,7 @@ public class TricksManager : MonoBehaviour {
 
     //////////////////////////////////////////////////////////////////////////////////////
 
-    public static int[] ManualTricksLevel = {0, 0, 0, 0};
+    // public static int[] ManualTricksLevel = {0, 0, 0, 0};
 
     public static List<ManualTricks> ManualTricksLeftArr = new List<ManualTricks>();
     public static List<ManualTricks> ManualTricksUpArr = new List<ManualTricks>();

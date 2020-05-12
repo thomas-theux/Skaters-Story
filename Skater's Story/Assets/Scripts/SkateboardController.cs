@@ -121,7 +121,7 @@ public class SkateboardController : MonoBehaviour {
 
         //////////////////////////////////////////////////////////////////////////////////////
 
-        // Only stop manualing when skater is in the air
+        // Only stop manualling when skater is in the air
         if (!IsGrounded) {
             if (TricksHandlerScript.PerformsManual) {
                 TricksHandlerScript.PerformsManual = false;
@@ -129,18 +129,17 @@ public class SkateboardController : MonoBehaviour {
                 TricksHandlerScript.TrickDone();
             }
         }
+
+        if (!IsOnRail) {
+            if (TricksHandlerScript.PerformsGrind) {
+                TricksHandlerScript.PerformsGrind = false;
+                TricksHandlerScript.TrickDone();
+            }
+        }
     }
 
 
     private void FixedUpdate() {
-        // if (!TricksControllerScript.IsBailing) {
-        //     if (IsGrounded) {
-        //         rb.AddForce(transform.right * horizontalAxis * maxBoardSpeed);
-        //     } else {
-        //         rb.AddForce(horizontalAxis * maxBoardSpeed, 0, 0);
-        //     }
-        // }
-
         if (!TricksHandlerScript.IsBailing) {
             if (IsGrounded) {
                 rb.AddForce(transform.right * horizontalMovement * maxBoardSpeed);
