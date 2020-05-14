@@ -48,12 +48,13 @@ public class SkateboardController : MonoBehaviour {
     // Variables for ground checking
     public bool IsGrounded = false;
     public bool IsOnRail = false;
-    // public bool CanGrind = false;
+    public bool IsGrinding = false;
 
     public Transform GroundChecker;
 
     private float GroundDistance = 0.05f;
     private float RailDistance = 0.1f;
+    private float GrindingDistance = 0.3f;
 
     [SerializeField] public LayerMask GroundedLayer;
     [SerializeField] public LayerMask RailLayer;
@@ -130,6 +131,7 @@ public class SkateboardController : MonoBehaviour {
             }
         }
 
+        // if (!IsOnRail) {
         if (!IsOnRail) {
             if (TricksHandlerScript.PerformsGrind) {
                 TricksHandlerScript.PerformsGrind = false;
@@ -227,6 +229,8 @@ public class SkateboardController : MonoBehaviour {
 
         IsOnRail = Physics.CheckSphere(GroundChecker.position, RailDistance, RailLayer, QueryTriggerInteraction.Ignore);
         TricksHandlerScript.SkateboardAnim.SetBool("Can Grind", IsOnRail);
+
+        IsGrinding = Physics.CheckSphere(GroundChecker.position, GrindingDistance, RailLayer, QueryTriggerInteraction.Ignore);
     }
 
 

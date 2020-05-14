@@ -42,6 +42,8 @@ public class TricksHandler : MonoBehaviour {
 
     private bool switchTextColor = false;
     private bool addGap = false;
+    public bool InsideRailTrigger = false;
+    public bool AtTheRail = false;
 
     // Definition for tricks combination values
     // 0 = !IsGrounded; 1 = CanGrind; 2 = IsGrounded
@@ -104,6 +106,11 @@ public class TricksHandler : MonoBehaviour {
         ContinuousRespectGain();
         DisplayTrickPoints();
         AwardOrBail();
+
+        MoveToRail();
+        CheckIfNeedToRemove();
+
+        // print(trickCombinationsArr.Count);
     }
 
 
@@ -251,6 +258,7 @@ public class TricksHandler : MonoBehaviour {
                         break;
                     case 1:
                         if (SkateboardControllerScript.IsOnRail) DoGrindTrick();
+                        // if (InsideRailTrigger) DoGrindTrick();
                         break;
                     case 2:
                         if (SkateboardControllerScript.IsGrounded) DoManualTrick();
@@ -411,6 +419,12 @@ public class TricksHandler : MonoBehaviour {
         IsBailing = true;
         PerformsTrick = false;
 
+        // Move skater to Z = 0 if he was grinding
+        if (AtTheRail) {
+            AtTheRail = false;
+            MoveFromRail();
+        }
+
         GainRespect = 0;
         performedTricks = 0;
         allTricksNamesArr.Clear();
@@ -478,6 +492,59 @@ public class TricksHandler : MonoBehaviour {
         DisplayTrickPoints();
 
         if (!PerformsTrick) TrickDone();
+    }
+
+
+    private void MoveToRail() {
+        if (InsideRailTrigger) {
+            if (trickCombinationsArr.Count > 0) {
+                if (trickCombinationsArr[0].trickCondition == 1) {
+                    if (!AtTheRail) {
+                        AtTheRail = true;
+                        SkateboardControllerScript.gameObject.transform.position = new Vector3(
+                            SkateboardControllerScript.gameObject.transform.position.x,
+                            SkateboardControllerScript.gameObject.transform.position.y,
+                            0.25f
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+
+    private void CheckIfNeedToRemove() {
+        if (InsideRailTrigger) {
+            if (SkateboardControllerScript.IsGrinding) {
+                if (trickCombinationsArr.Count > 0) {
+                    if (trickCombinationsArr[0].trickCondition != 1) {
+                        if (AtTheRail) {
+                            AtTheRail = false;
+                            MoveFromRail();
+                        }
+                    }
+                } else {
+                    if (AtTheRail) {
+                        AtTheRail = false;
+                        MoveFromRail();
+                    }
+                }
+            }
+        } else {
+            if (AtTheRail) {
+                AtTheRail = false;
+                MoveFromRail();
+            }
+        }
+    }
+
+
+    private void MoveFromRail() {
+        SkateboardControllerScript.gameObject.transform.position = new Vector3(
+            SkateboardControllerScript.gameObject.transform.position.x,
+            SkateboardControllerScript.gameObject.transform.position.y,
+            0
+        );
     }
     
 }
