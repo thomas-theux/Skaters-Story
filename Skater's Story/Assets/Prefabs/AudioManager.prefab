@@ -104,3 +104,15 @@ MonoBehaviour:
     pitch: 1
     loop: 1
     source: {fileID: 0}
+  - name: Combo Successful
+    clip: {fileID: 8300000, guid: 3f51d2a3370aa414ab30d93cf0062712, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Gap
+    clip: {fileID: 8300000, guid: f06ffa85badba42c685e12e07bcd6808, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}

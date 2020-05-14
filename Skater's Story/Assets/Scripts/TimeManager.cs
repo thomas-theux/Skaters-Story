@@ -9,8 +9,10 @@ public class TimeManager : MonoBehaviour {
     
 
     private void Update() {
-        Time.timeScale += (1f / slowdownLength) * Time.unscaledDeltaTime;
-        Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
+        if (GameSettings.SlowMotionTricks > 0) {
+            Time.timeScale += (1f / slowdownLength) * Time.unscaledDeltaTime;
+            Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
+        }
     }
 
 

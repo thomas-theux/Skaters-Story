@@ -40,8 +40,10 @@ public class TricksHandler : MonoBehaviour {
     private float grindTimer = 0;
     private float flipTimer = 0;
 
+    private bool switchTextColor = false;
+    private bool addGap = false;
+
     // Definition for tricks combination values
-    // 0 = left; 1 = up; 2 = right; 3 = down; 4 = no direction
     // 0 = !IsGrounded; 1 = CanGrind; 2 = IsGrounded
 
     private enum directionsEnum {
@@ -85,6 +87,10 @@ public class TricksHandler : MonoBehaviour {
 
     void Awake() {
         player = ReInput.players.GetPlayer(SkateboardControllerScript.PlayerID);
+
+        // Set font colors
+        TrickPoints.color = ColorManager.KeyYellow;
+        TrickName.color = ColorManager.KeyGrey80;
     }
 
 
@@ -341,29 +347,20 @@ public class TricksHandler : MonoBehaviour {
             allPerformedTricksText += allTricksNamesArr[i];
         }
 
-        // string allPerformedTricksText = "";
-
-        // for (int i = 0; i < allTricksNamesArr.Count; i++) {
-        //     if (i > 0) allPerformedTricksText += " + ";
-
-        //     if (allTricksNamesArr.Count > 3) {
-        //         if (i >= allTricksNamesArr.Count - 3) {}
-        //         allPerformedTricksText += allTricksNamesArr[i];
-        //     } else {
-        //         allPerformedTricksText += allTricksNamesArr[i];
-        //     }
-        // }
-
         TrickName.text = allPerformedTricksText;
     }
 
 
     private void DisplayTrickPoints() {
-        if (PerformsTrick) {
-            // float currentCombo = respectForTrick * CharacterSheetScript.StatCharisma;
-            // TrickPoints.text = currentCombo.ToString("N0");
+        if (PerformsTrick || addGap) {
             float currentCombo = respectForTrick + GainRespect;
             TrickPoints.text = currentCombo.ToString("N0") + " x " + performedTricks;
+
+            if (switchTextColor) {
+                // TrickPoints.colorGradient = new VertexGradient(ColorManager.TricksBlueTop, ColorManager.TricksBlueTop, ColorManager.TricksBlueBottom, ColorManager.TricksBlueBottom);
+                TrickPoints.color = ColorManager.KeyYellow;
+                switchTextColor = false;
+            }
         }
     }
 
@@ -381,10 +378,14 @@ public class TricksHandler : MonoBehaviour {
 
 
     public void TrickDone() {
-        // GainRespect += Mathf.RoundToInt(respectForTrick * CharacterSheetScript.StatCharisma);
         GainRespect += (int)respectForTrick;
 
-        trickCombinationsArr.RemoveAt(0);
+        if (trickCombinationsArr.Count > 0) {
+            trickCombinationsArr.RemoveAt(0);
+        }
+
+
+        if (addGap) addGap = false;
         PerformsTrick = false;
 
         respectForTrick = 0;
@@ -436,7 +437,15 @@ public class TricksHandler : MonoBehaviour {
             SkateboardControllerScript.CharacterSheetScript.NewRespectValue += multipliedRespect;
             SkateboardControllerScript.CharacterSheetScript.IncreasingRespect = true;
 
+            AudioManager.instance.Play("Combo Successful");
+
             TrickPoints.text = multipliedRespect.ToString("N0");
+
+            if (!switchTextColor) {
+                // TrickPoints.colorGradient = new VertexGradient(ColorManager.TricksYellowTop, ColorManager.TricksYellowTop, ColorManager.TricksYellowBottom, ColorManager.TricksYellowBottom);
+                TrickPoints.color = ColorManager.KeyGreen;
+                switchTextColor = true;
+            }
 
             GainRespect = 0;
             performedTricks = 0;
@@ -456,6 +465,19 @@ public class TricksHandler : MonoBehaviour {
             TrickName.text = "";
             TrickPoints.text = "";
         }
+    }
+
+
+    public void AddComboElement(string comboName, int points) {
+        AudioManager.instance.Play("Gap");
+
+        addGap = true;
+        respectForTrick += points;
+
+        DisplayTrickName(comboName);
+        DisplayTrickPoints();
+
+        if (!PerformsTrick) TrickDone();
     }
     
 }
