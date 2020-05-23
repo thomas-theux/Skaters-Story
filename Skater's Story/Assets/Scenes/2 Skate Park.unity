@@ -21181,11 +21181,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 3360269987779028013, guid: b2e705fc95c7e4140b9515200daf1873,
-        type: 3}
-      propertyPath: SlowMotion
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2e705fc95c7e4140b9515200daf1873, type: 3}
 --- !u!33 &8975105130601167954
