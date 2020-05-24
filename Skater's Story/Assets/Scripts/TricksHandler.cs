@@ -10,10 +10,15 @@ public class TricksHandler : MonoBehaviour {
     public CharacterSheet CharacterSheetScript;
     public TimeManager TimeManagerScript;
     public Animator SkateboardAnim;
+
     private Player player;
 
     public TMP_Text TrickPoints;
     public TMP_Text TrickName;
+
+    public GameObject BalancingGO;
+    public GameObject GrindBalanceGO;
+    public GameObject ManualBalanceGO;
 
     public bool PerformsTrick = false;
     public bool PerformsManual = false;
@@ -307,6 +312,9 @@ public class TricksHandler : MonoBehaviour {
         string performedTrickName = whichGrindTrick.trickName;
         
         DisplayTrickName(performedTrickName);
+
+        BalancingGO.SetActive(true);
+        GrindBalanceGO.SetActive(true);
     }
 
 
@@ -328,6 +336,9 @@ public class TricksHandler : MonoBehaviour {
         string performedTrickName = whichManualTrick.trickName;
         
         DisplayTrickName(performedTrickName);
+
+        BalancingGO.SetActive(true);
+        ManualBalanceGO.SetActive(true);
     }
 
 
@@ -386,6 +397,9 @@ public class TricksHandler : MonoBehaviour {
 
 
     public void TrickDone() {
+        if (GrindBalanceGO) GrindBalanceGO.SetActive(false);
+        if (ManualBalanceGO) ManualBalanceGO.SetActive(false);
+
         GainRespect += (int)respectForTrick;
 
         if (trickCombinationsArr.Count > 0) {
@@ -415,9 +429,16 @@ public class TricksHandler : MonoBehaviour {
     }
 
 
-    private void Bail() {
+    public void Bail() {
+        if (GrindBalanceGO) GrindBalanceGO.SetActive(false);
+        if (ManualBalanceGO) ManualBalanceGO.SetActive(false);
+
+        BalancingGO.SetActive(false);
+
         IsBailing = true;
         PerformsTrick = false;
+        PerformsGrind = false;
+        PerformsManual = false;
 
         // Move skater to Z = 0 if he was grinding
         if (AtTheRail) {
@@ -445,6 +466,8 @@ public class TricksHandler : MonoBehaviour {
 
 
     private void AwardRespect() {
+        BalancingGO.SetActive(false);
+
         if (GainRespect > 0) {
             int multipliedRespect = GainRespect * performedTricks;
 
