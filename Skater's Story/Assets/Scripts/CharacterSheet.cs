@@ -24,11 +24,11 @@ public class CharacterSheet : MonoBehaviour {
 
     public float CurrentRespectValue = 0;
     public float NewRespectValue = 0;
-    private float RespectNeededToLevelUp = 100;
+    private float RespectNeededToLevelUp = 250;
     private float RespectNeededLastLevel = 0;
 
     private float exponent = 1.75f;
-    private float baseRespect = 1000.0f;
+    private float baseRespect = 250.0f;
 
     private float newRespectValue = 0.0f;
     private float currentVelocity = 0.0f;

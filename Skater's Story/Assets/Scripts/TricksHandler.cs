@@ -37,10 +37,10 @@ public class TricksHandler : MonoBehaviour {
     private float increaseDelayTimer = 0;
     public int GainRespect = 0;
 
-    private float eraseTrickNameTimeFail = 0.2f;
-    private float eraseTrickNameTimeSuccess = 1.5f;
+    private float eraseTrickNameTime = 1.5f;
 
-    private float resetDelayTime = 0.2f;
+    // private float resetDelayTime = 0.2f;
+    private float resetDelayTime = 0.4f;
     private float simpleTrickTimer = 0.05f;
     private float grindTimer = 0;
     private float flipTimer = 0;
@@ -49,6 +49,10 @@ public class TricksHandler : MonoBehaviour {
     private bool addGap = false;
     public bool InsideRailTrigger = false;
     public bool AtTheRail = false;
+
+    private bool startRemoveTimer = false;
+    private float removeTimer = 0;
+    private float removeDelay = 0.25f;
 
     // Definition for tricks combination values
     // 0 = !IsGrounded; 1 = CanGrind; 2 = IsGrounded
@@ -114,19 +118,19 @@ public class TricksHandler : MonoBehaviour {
 
         MoveToRail();
         CheckIfNeedToRemove();
-
-        // print(trickCombinationsArr.Count);
     }
 
 
     private void GetInput() {
-        SquareButton = player.GetButtonDown("Square");
-        TriangleButton = player.GetButtonDown("Triangle");
+        if (!IsBailing) {
+            SquareButton = player.GetButtonDown("Square");
+            TriangleButton = player.GetButtonDown("Triangle");
 
-        DPadLeft = player.GetButton("DPad Left");
-        DPadUp = player.GetButton("DPad Up");
-        DPadRight = player.GetButton("DPad Right");
-        DPadDown = player.GetButton("DPad Down");
+            DPadLeft = player.GetButton("DPad Left");
+            DPadUp = player.GetButton("DPad Up");
+            DPadRight = player.GetButton("DPad Right");
+            DPadDown = player.GetButton("DPad Down");
+        }
     }
 
 
@@ -373,7 +377,12 @@ public class TricksHandler : MonoBehaviour {
     private void DisplayTrickPoints() {
         if (PerformsTrick || addGap) {
             float currentCombo = respectForTrick + GainRespect;
-            TrickPoints.text = currentCombo.ToString("N0") + " x " + performedTricks;
+
+            if (performedTricks == 1) {
+                TrickPoints.text = currentCombo.ToString("N0");
+            } else {
+                TrickPoints.text = currentCombo.ToString("N0") + "<size=30%> </size>" + "<size=42>X</size>" + "<size=30%> </size>" + performedTricks;
+            }
 
             if (switchTextColor) {
                 // TrickPoints.colorGradient = new VertexGradient(ColorManager.TricksBlueTop, ColorManager.TricksBlueTop, ColorManager.TricksBlueBottom, ColorManager.TricksBlueBottom);
@@ -446,16 +455,21 @@ public class TricksHandler : MonoBehaviour {
             MoveFromRail();
         }
 
+        SkateboardAnim.SetTrigger("Bail");
+        AudioManager.instance.Play("Bail");
+
+        int multipliedRespect = (int)respectForTrick * performedTricks;
+        TrickPoints.text = multipliedRespect.ToString("N0");
+        TrickPoints.text = "<color=red>" + TrickPoints.text + "</color>";
+        TrickName.text = "<color=red>" + TrickName.text + "</color>";
+
         GainRespect = 0;
         performedTricks = 0;
         allTricksNamesArr.Clear();
         trickCombinationsArr.Clear();
 
         // Instantly erase trick names when player bails
-        StartCoroutine(EraseTrickName(eraseTrickNameTimeFail));
-
-        SkateboardAnim.SetTrigger("Bail");
-        AudioManager.instance.Play("Bail");
+        StartCoroutine(EraseTrickName(eraseTrickNameTime));
     }
 
 
@@ -490,7 +504,7 @@ public class TricksHandler : MonoBehaviour {
             trickCombinationsArr.Clear();
 
             // Erase trick names after a few seconds
-            StartCoroutine(EraseTrickName(eraseTrickNameTimeSuccess));
+            StartCoroutine(EraseTrickName(eraseTrickNameTime));
         }
     }
 
