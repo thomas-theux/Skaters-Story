@@ -10,11 +10,15 @@ public class CharacterSheet : MonoBehaviour {
     public TMP_Text CurrentLevelText;
     public TMP_Text CurrentRespectText;
 
+    public TMP_Text MoneyCountText;
+
+    public int MoneyCount = 100;
+
     public float StatOllie = 200.0f;            // Max ollie probably shouldn't be over 220
     public float StatSpeed = 6.0f;              // Max speed probably shouldn't be over 8
     public float StatFlip = 6.0f;               // Swiftness: how fast you perform flip tricks
     public float StatBalance = 6.0f;            // Stat for balancing grinds and manuals
-    public float StatCharisma = 1.0f;           // The multiplier for respect when performing tricks
+    public float StatCharisma = 1.0f;           // The multiplier for respect when performing tricks and for collecting money
 
     public int SkaterLevel = 1;
 
@@ -98,6 +102,11 @@ public class CharacterSheet : MonoBehaviour {
         float neededRespect = baseRespect * calculatedRespect;
 
         RespectNeededToLevelUp = neededRespect;
+    }
+
+
+    public void UpdateMoneyCount() {
+        MoneyCountText.text = "$" + MoneyCount;
     }
 
 }

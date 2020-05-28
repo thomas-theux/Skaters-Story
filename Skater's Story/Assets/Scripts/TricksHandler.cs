@@ -50,10 +50,6 @@ public class TricksHandler : MonoBehaviour {
     public bool InsideRailTrigger = false;
     public bool AtTheRail = false;
 
-    private bool startRemoveTimer = false;
-    private float removeTimer = 0;
-    private float removeDelay = 0.25f;
-
     // Definition for tricks combination values
     // 0 = !IsGrounded; 1 = CanGrind; 2 = IsGrounded
 

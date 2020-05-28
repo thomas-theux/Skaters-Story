@@ -116,3 +116,9 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: Collect Money
+    clip: {fileID: 8300000, guid: 776ee996d75e04ec680e91b2fa267d8e, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
