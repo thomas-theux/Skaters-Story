@@ -4,16 +4,28 @@ using UnityEngine;
 
 public class RailTrigger : MonoBehaviour {
 
+    private SkateboardController skateboardControllerScript;
+    public Transform GrindStartPos;
+
+
     private void OnTriggerEnter(Collider other) {
         if (other.tag == "Board Collider") {
-            other.transform.root.GetComponent<SkateboardController>().TricksHandlerScript.InsideRailTrigger = true;
+            if (skateboardControllerScript == null) {
+                skateboardControllerScript = other.transform.root.GetComponent<SkateboardController>();
+            }
+            
+            skateboardControllerScript.TricksHandlerScript.InsideRailTrigger = true;
         }
     }
 
 
     private void OnTriggerExit(Collider other) {
         if (other.tag == "Board Collider") {
-            other.transform.root.GetComponent<SkateboardController>().TricksHandlerScript.InsideRailTrigger = false;
+            if (skateboardControllerScript == null) {
+                skateboardControllerScript = other.transform.root.GetComponent<SkateboardController>();
+            }
+            
+            skateboardControllerScript.TricksHandlerScript.InsideRailTrigger = false;
         }
     }
 

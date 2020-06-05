@@ -31,10 +31,8 @@ public class CameraController : MonoBehaviour {
 
 
 	private void FixedUpdate() {
-
-        Vector3 desiredPos = Target.position + Offset;
-        Vector3 smoothedPos = Vector3.Lerp(this.transform.position, desiredPos, SmoothSpeed * Time.fixedDeltaTime);
-        
-        this.transform.position = smoothedPos;
+		Vector3 desiredPos = Target.position + Offset;
+		Vector3 smoothedPos = Vector3.Lerp(this.transform.position, desiredPos, SmoothSpeed * Time.fixedDeltaTime);
+		this.transform.position = smoothedPos;
 	}
 }

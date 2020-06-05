@@ -14,6 +14,8 @@ public class SkateboardController : MonoBehaviour {
     // public TricksController TricksControllerScript;
     public TricksHandler TricksHandlerScript;
 
+    public Camera PlayerCamera;
+    public GameObject PlayerUI;
     public SphereCollider BoardCollider;
 
     // private float slowMotionSpeed = 0.8f;
@@ -56,8 +58,9 @@ public class SkateboardController : MonoBehaviour {
     private float RailDistance = 0.1f;
     private float GrindingDistance = 0.3f;
 
-    [SerializeField] public LayerMask GroundedLayer;
-    [SerializeField] public LayerMask RailLayer;
+    public LayerMask GroundedLayer;
+    public LayerMask RailLayer;
+    public LayerMask alignToLayers;
 
     private float currentBoardSpeed;
 
@@ -241,21 +244,16 @@ public class SkateboardController : MonoBehaviour {
         if (Physics.Raycast(ray, out hit, 0.25f) == true) {
             CurrentSurface = hit.collider.tag;
         }
-
-        // switch (rayHit.collider.tag) {
-        //     case "Concrete":
-        //         break;
-        //     case "Wood":
-        //         break;
-        // }
     }
 
 
     private void AlignToSurface() {
         Ray ray = new Ray(transform.position, -transform.up);
+        Debug.DrawRay(transform.position, -transform.up, Color.blue);
+
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, raycastDistance) == true) {
+        if (Physics.Raycast(ray, out hit, raycastDistance, alignToLayers) == true) {
             rotCur = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
             aligning = true;
         } else {

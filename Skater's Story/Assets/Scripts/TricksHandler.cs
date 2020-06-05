@@ -37,7 +37,9 @@ public class TricksHandler : MonoBehaviour {
     private float increaseDelayTimer = 0;
     public int GainRespect = 0;
 
-    private float eraseTrickNameTime = 1.5f;
+    private float eraseTrickNameTimeDef = 1.5f;
+    public float eraseTrickNameTime = 0;
+    private bool erasedTrickTexts = false;
 
     // private float resetDelayTime = 0.2f;
     private float resetDelayTime = 0.4f;
@@ -110,6 +112,7 @@ public class TricksHandler : MonoBehaviour {
         StartPerforming();
         ContinuousRespectGain();
         DisplayTrickPoints();
+        EraseTrickTexts();
         AwardOrBail();
 
         MoveToRail();
@@ -465,7 +468,9 @@ public class TricksHandler : MonoBehaviour {
         trickCombinationsArr.Clear();
 
         // Instantly erase trick names when player bails
-        StartCoroutine(EraseTrickName(eraseTrickNameTime));
+        // StartCoroutine(EraseTrickName(eraseTrickNameTime));
+        eraseTrickNameTime = eraseTrickNameTimeDef;
+        erasedTrickTexts = false;
     }
 
 
@@ -500,7 +505,23 @@ public class TricksHandler : MonoBehaviour {
             trickCombinationsArr.Clear();
 
             // Erase trick names after a few seconds
-            StartCoroutine(EraseTrickName(eraseTrickNameTime));
+            // StartCoroutine(EraseTrickName(eraseTrickNameTime));
+            eraseTrickNameTime = eraseTrickNameTimeDef;
+            erasedTrickTexts = false;
+        }
+    }
+
+
+    private void EraseTrickTexts() {
+        if (eraseTrickNameTime > 0) {
+            eraseTrickNameTime -= Time.deltaTime;
+        } else {
+            if (!erasedTrickTexts) {
+                erasedTrickTexts = true;
+
+                TrickName.text = "";
+                TrickPoints.text = "";
+            }
         }
     }
 
