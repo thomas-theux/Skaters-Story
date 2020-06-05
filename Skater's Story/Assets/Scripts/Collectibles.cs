@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Collectibles : MonoBehaviour {
 
+    public CollectiblesMagnet CollectiblesMagnetScript;
+
     private int minAmount = 100;
     private int maxAmount = 1000;
 
@@ -32,9 +34,10 @@ public class Collectibles : MonoBehaviour {
 
 
     private void Floating() {
-        float yPos = Mathf.Sin(Time.time * moveSpeed);
-        transform.position = startPosition + new Vector3(0, yPos / moveHeight, 0);
-        // transform.position = new Vector3(transform.position.x, transform.position.y + Mathf.Sin(Time.time * moveSpeed), transform.position.z);
+        if (!CollectiblesMagnetScript.PlayerDetected) {
+            float yPos = Mathf.Sin(Time.time * moveSpeed);
+            transform.position = startPosition + new Vector3(0, yPos / moveHeight, 0);
+        }
     }
 
 
