@@ -469,8 +469,8 @@ public class TricksHandler : MonoBehaviour {
 
         // Instantly erase trick names when player bails
         // StartCoroutine(EraseTrickName(eraseTrickNameTime));
-        eraseTrickNameTime = eraseTrickNameTimeDef;
-        erasedTrickTexts = false;
+        // eraseTrickNameTime = eraseTrickNameTimeDef;
+        // erasedTrickTexts = false;
     }
 
 
@@ -506,34 +506,43 @@ public class TricksHandler : MonoBehaviour {
 
             // Erase trick names after a few seconds
             // StartCoroutine(EraseTrickName(eraseTrickNameTime));
-            eraseTrickNameTime = eraseTrickNameTimeDef;
-            erasedTrickTexts = false;
+            // eraseTrickNameTime = eraseTrickNameTimeDef;
+            // erasedTrickTexts = false;
         }
     }
 
 
     private void EraseTrickTexts() {
-        if (eraseTrickNameTime > 0) {
-            eraseTrickNameTime -= Time.deltaTime;
-        } else {
-            if (!erasedTrickTexts) {
-                erasedTrickTexts = true;
+        if (trickCombinationsArr.Count == 0) {
 
-                TrickName.text = "";
-                TrickPoints.text = "";
+            if (eraseTrickNameTime > 0) {
+                eraseTrickNameTime -= Time.deltaTime;
+            } else {
+                if (!erasedTrickTexts) {
+                    erasedTrickTexts = true;
+
+                    TrickName.text = "";
+                    TrickPoints.text = "";
+                }
+            }
+            
+        } else {
+            if (eraseTrickNameTime < eraseTrickNameTimeDef) {
+                eraseTrickNameTime = eraseTrickNameTimeDef;
+                erasedTrickTexts = false;
             }
         }
     }
 
 
-    private IEnumerator EraseTrickName(float eraseTrickTime) {
-        yield return new WaitForSeconds(eraseTrickTime);
+    // private IEnumerator EraseTrickName(float eraseTrickTime) {
+    //     yield return new WaitForSeconds(eraseTrickTime);
         
-        if (!PerformsTrick) {
-            TrickName.text = "";
-            TrickPoints.text = "";
-        }
-    }
+    //     if (!PerformsTrick) {
+    //         TrickName.text = "";
+    //         TrickPoints.text = "";
+    //     }
+    // }
 
 
     public void AddComboElement(string comboName, int points) {

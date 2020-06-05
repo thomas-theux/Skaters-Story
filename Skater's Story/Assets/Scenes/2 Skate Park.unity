@@ -5928,7 +5928,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 658476867}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 9.73, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 790432469}
@@ -24725,7 +24725,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2062554736}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 497fdf43e2d9d49faa9a8cc8e9478823, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -25350,7 +25350,7 @@ PrefabInstance:
     - target: {fileID: 1864073831779938019, guid: 3080a9267145a43dbac018cf88676ece,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 1864073831779938019, guid: 3080a9267145a43dbac018cf88676ece,
         type: 3}
@@ -25391,6 +25391,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1864073832113871218, guid: 3080a9267145a43dbac018cf88676ece,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 1864073832756815444, guid: 3080a9267145a43dbac018cf88676ece,
         type: 3}
