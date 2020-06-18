@@ -10,9 +10,13 @@ public class CharacterSheet : MonoBehaviour {
     public TMP_Text CurrentLevelText;
     public TMP_Text CurrentRespectText;
 
-    public TMP_Text MoneyCountText;
+    public TMP_Text ResourceOneText;
+    public TMP_Text ResourceTwoText;
 
-    public int MoneyCount = 100;
+    // public int ResourceOne = 100;
+    // public int ResourceTwo = 100;
+
+    public int[] ResourceCountArr = {100, 100};
 
     public float StatOllie = 200.0f;            // Max ollie probably shouldn't be over 220
     public float StatSpeed = 6.0f;              // Max speed probably shouldn't be over 8
@@ -105,8 +109,9 @@ public class CharacterSheet : MonoBehaviour {
     }
 
 
-    public void UpdateMoneyCount() {
-        MoneyCountText.text = "$" + MoneyCount;
+    public void UpdateResourceCount() {
+        ResourceOneText.text = "$" + ResourceCountArr[0];
+        ResourceTwoText.text = "€" + ResourceCountArr[1];
     }
 
 }

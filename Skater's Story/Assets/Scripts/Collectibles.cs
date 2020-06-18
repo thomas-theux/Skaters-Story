@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Collectibles : MonoBehaviour {
 
+    private int ResourceType;
+
     public CollectiblesMagnet CollectiblesMagnetScript;
 
     private int minAmount = 100;
-    private int maxAmount = 1000;
+    private int maxAmount = 501;
 
     private float rotateSpeed = 150f;
     private float moveSpeed = 3f;
@@ -19,6 +21,7 @@ public class Collectibles : MonoBehaviour {
 
     private void Awake() {
         startPosition = this.transform.position;
+        ResourceType = Random.Range(0, 2);
     }
 
 
@@ -49,10 +52,10 @@ public class Collectibles : MonoBehaviour {
 
             float moneyMultiplier = CharacterSheetScript.StatCharisma;
             int rndAmount = Random.Range(minAmount, maxAmount);
-            int addMoney = Mathf.RoundToInt(rndAmount * moneyMultiplier);
+            int addResource = Mathf.RoundToInt(rndAmount * moneyMultiplier);
 
-            CharacterSheetScript.MoneyCount += addMoney;
-            CharacterSheetScript.UpdateMoneyCount();
+            CharacterSheetScript.ResourceCountArr[ResourceType] += addResource;
+            CharacterSheetScript.UpdateResourceCount();
 
             Destroy(this.gameObject);
         }
