@@ -13,7 +13,9 @@ public class ColorManager : MonoBehaviour {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static Color32 KeyWhite = new Color32(235, 245, 255, 255);
-    public static Color32 KeyGrey80 = new Color32(210, 220, 230, 255);
+    public static Color32 KeyWhite40 = new Color32(235, 245, 255, 100);
+
+    public static Color32 KeyGrey = new Color32(210, 220, 230, 255);
 
     public static Color32 KeyBlue = new Color32(0, 205, 230, 255);
     public static Color32 KeyGreen = new Color32(42, 209, 70, 255);

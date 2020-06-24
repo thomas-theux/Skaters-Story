@@ -99,7 +99,7 @@ public class TricksHandler : MonoBehaviour {
 
         // Set font colors
         TrickPoints.color = ColorManager.KeyYellow;
-        TrickName.color = ColorManager.KeyGrey80;
+        TrickName.color = ColorManager.KeyGrey;
     }
 
 
@@ -121,14 +121,17 @@ public class TricksHandler : MonoBehaviour {
 
 
     private void GetInput() {
-        if (!IsBailing) {
-            SquareButton = player.GetButtonDown("Square");
-            TriangleButton = player.GetButtonDown("Triangle");
+        // Only be able to skate when the menu isn't open
+        if (!CharacterSheetScript.MenuOpen) {
+            if (!IsBailing) {
+                SquareButton = player.GetButtonDown("Square");
+                TriangleButton = player.GetButtonDown("Triangle");
 
-            DPadLeft = player.GetButton("DPad Left");
-            DPadUp = player.GetButton("DPad Up");
-            DPadRight = player.GetButton("DPad Right");
-            DPadDown = player.GetButton("DPad Down");
+                DPadLeft = player.GetButton("DPad Left");
+                DPadUp = player.GetButton("DPad Up");
+                DPadRight = player.GetButton("DPad Right");
+                DPadDown = player.GetButton("DPad Down");
+            }
         }
     }
 

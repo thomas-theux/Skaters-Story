@@ -6,17 +6,14 @@ using TMPro;
 
 public class CharacterSheet : MonoBehaviour {
 
+    public bool MenuOpen = false;
+
     public Image RespectBar;
     public TMP_Text CurrentLevelText;
     public TMP_Text CurrentRespectText;
 
-    public TMP_Text ResourceOneText;
-    public TMP_Text ResourceTwoText;
-
-    // public int ResourceOne = 100;
-    // public int ResourceTwo = 100;
-
-    public int[] ResourceCountArr = {100, 100};
+    public TMP_Text MoneyCountText;
+    public int MoneyCount = 100;
 
     public float StatOllie = 200.0f;            // Max ollie probably shouldn't be over 220
     public float StatSpeed = 6.0f;              // Max speed probably shouldn't be over 8
@@ -48,6 +45,7 @@ public class CharacterSheet : MonoBehaviour {
     private void Awake() {
         // DisplayRespectBar();
         CurrentLevelText.text = SkaterLevel + "";
+        UpdateMoneyCount();
     }
 
 
@@ -109,9 +107,12 @@ public class CharacterSheet : MonoBehaviour {
     }
 
 
-    public void UpdateResourceCount() {
-        ResourceOneText.text = "$" + ResourceCountArr[0];
-        ResourceTwoText.text = "€" + ResourceCountArr[1];
+    public void UpdateMoneyCount() {
+        MoneyCountText.text = "$" + MoneyCount;
+
+        for (int i = 0; i < BuildingManager.BuildingElementsScriptArr.Count; i++) {
+            BuildingManager.BuildingElementsScriptArr[i].CheckForMoney();
+        }
     }
 
 }

@@ -11,15 +11,13 @@ public class SkateboardController : MonoBehaviour {
 
     public Rigidbody rb;
     public CharacterSheet CharacterSheetScript;
-    // public TricksController TricksControllerScript;
     public TricksHandler TricksHandlerScript;
 
     public Camera PlayerCamera;
     public GameObject PlayerUI;
     public SphereCollider BoardCollider;
 
-    // private float slowMotionSpeed = 0.8f;
-    // private bool timeIsSlowedDown = false;
+    public GameObject MenuUI;
 
     public int Direction = 1;
     private bool directionSwitchR = false;
@@ -74,6 +72,7 @@ public class SkateboardController : MonoBehaviour {
     private float XButtonDown;
 
     private bool XButtonUp = false;
+    private bool ShareButton = false;
     private bool OptionsButton = false;
 
 
@@ -104,7 +103,9 @@ public class SkateboardController : MonoBehaviour {
 
         //////////////////////////////////////////////////////////////////////////////////////
 
-        if (OptionsButton) CheckpointRespawn();
+        if (ShareButton) CheckpointRespawn();
+
+        if (OptionsButton) TriggerMenu();
         
         if (XButtonUp) {
             if (IsGrounded || IsOnRail) {
@@ -156,14 +157,20 @@ public class SkateboardController : MonoBehaviour {
 
 
     private void GetInput() {
-        // Only be able to move the skater when he's not bailing or when he's grounded
-        if (GameSettings.ClassicControls) {
-            ClassicControls();
-        } else if (!GameSettings.ClassicControls) {
-            NewControls();
-        }
+        // Only be able to skate when the menu isn't open
+        if (!CharacterSheetScript.MenuOpen) {
 
-        OptionsButton = player.GetButtonUp("Options");
+            // Only be able to move the skater when he's not bailing or when he's grounded
+            if (GameSettings.ClassicControls) {
+                ClassicControls();
+            } else if (!GameSettings.ClassicControls) {
+                NewControls();
+            }
+
+            ShareButton = player.GetButtonDown("Share");
+        }
+        
+        OptionsButton = player.GetButtonDown("Options");
     }
 
 
@@ -326,6 +333,15 @@ public class SkateboardController : MonoBehaviour {
 
         this.transform.position = new Vector3(respawnPosX, 1.0f, 0);
         this.transform.rotation = Quaternion.Euler(Vector3.zero);
+    }
+
+
+    private void TriggerMenu() {
+        if (OptionsButton) {
+            CharacterSheetScript.MenuOpen = !CharacterSheetScript.MenuOpen;
+
+            MenuUI.SetActive(CharacterSheetScript.MenuOpen);
+        }
     }
 
 
