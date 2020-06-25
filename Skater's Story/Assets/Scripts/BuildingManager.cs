@@ -12,6 +12,7 @@ public class BuildingManager : MonoBehaviour {
     public SkateboardController SkateboardControllerScript;
 
     public GameObject ElementsContainer;
+    public GameObject ObjectsContainer;
     public GameObject BuildingElementGO;
     public GameObject BuildingCursorGO;
 
@@ -20,11 +21,14 @@ public class BuildingManager : MonoBehaviour {
     public static List<BuildingObjects> BuildingObjectsClassArr = new List<BuildingObjects>();
     public static List<BuildingElement> BuildingElementsScriptArr = new List<BuildingElement>();
 
+    public List<GameObject> BuildingObjectsArr = new List<GameObject>();
+
     public List<bool> RebuiltElementsArr = new List<bool>();
     private List<GameObject> BuildingElementsArr = new List<GameObject>();
 
     public int RebuiltElementsCount = 0;
-    public int MaxBuildingElements = 24;
+    // private int MaxBuildingElements = 24;
+    private int MaxBuildingElements = 9;
 
     private float itemsDistance = 248f;
     private float cursorMarginX = 3f;
@@ -80,6 +84,9 @@ public class BuildingManager : MonoBehaviour {
         //////////////////////////////////////////////////////////////////////////////////////
 
         for (int i = 0; i < MaxBuildingElements; i++) {
+            ///////////////////////////////////////////
+            // Instantiate navigation elements
+
             GameObject newBuildingElement = Instantiate(BuildingElementGO);
 
             BuildingElement BuildingElementScript = newBuildingElement.GetComponent<BuildingElement>();
@@ -87,9 +94,15 @@ public class BuildingManager : MonoBehaviour {
             BuildingElementScript.ItemID = i;
 
             newBuildingElement.transform.parent = ElementsContainer.transform;
+            BuildingElementScript.BuildingObjectGO.transform.parent = ObjectsContainer.transform;
 
-            if (i < 10) newBuildingElement.name = "BuildingElement" + "0" + i;
-            else newBuildingElement.name = "BuildingElement" + i;
+            if (i < 10) {
+                newBuildingElement.name = "BuildingElement" + "0" + i;
+                BuildingElementScript.BuildingObjectGO.name = "BuildingObject" + "0" + i;
+            } else {
+                newBuildingElement.name = "BuildingElement" + i;
+                BuildingElementScript.BuildingObjectGO.name = "BuildingObject" + i;
+            }
 
             newBuildingElement.transform.localScale = new Vector3(1, 1, 1);
 
@@ -214,6 +227,14 @@ public class BuildingManager : MonoBehaviour {
             BuildingElementsArr[rebuildIndex].transform.localPosition.x + cursorMarginX,
             BuildingElementsArr[rebuildIndex].transform.localPosition.y + cursorMarginY
         );
+
+        // Tell the element if it's selected or not
+        for (int i = 0; i < BuildingElementsScriptArr.Count; i++) {
+            if (rebuildIndex == i) BuildingElementsScriptArr[rebuildIndex].IsSelected = true;
+            else BuildingElementsScriptArr[i].IsSelected = false;
+
+            BuildingElementsScriptArr[i].DisplayObjectStatus();
+        }
     }
 
 
@@ -260,6 +281,11 @@ public class BuildingManager : MonoBehaviour {
     private void DisplayBuildPercentage() {
         // RebuiltPercentage = (Mathf.Round(RebuiltElementsCount) / Mathf.Round(MaxBuildingElements)) * 100;
         PercentageText.text = RebuiltElementsCount + "/" + MaxBuildingElements;
+    }
+
+
+    private void DisplayObjectsStatus() {
+        for (int i = 0; i < BuildingObjectsArr.Count; i++) {}
     }
 
 }

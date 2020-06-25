@@ -7,6 +7,9 @@ public class BuildingObjects : MonoBehaviour {
 
     public int itemCosts;
     public int buildingTime;
+
+    public float xPos;
+    public float yPos;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -14,10 +17,13 @@ public class BuildingObjects : MonoBehaviour {
 
 public class Object00: BuildingObjects {
     public Object00() {
-        this.itemName = "Uncle Fred’s soup kitchen";
+        this.itemName = "That rusty old rail";
 
         this.itemCosts = 360;
         this.buildingTime = 3;
+
+        this.xPos = -10;
+        this.yPos = 10;
     }
 }
 
@@ -27,69 +33,93 @@ public class Object01: BuildingObjects {
 
         this.itemCosts = 540;
         this.buildingTime = 4;
+
+        this.xPos = -460;
+        this.yPos = 10;
     }
 }
 
 public class Object02: BuildingObjects {
     public Object02() {
-        this.itemName = "The old and dirty fun park";
+        this.itemName = "The industrial slope";
 
         this.itemCosts = 720;
         this.buildingTime = 5;
+
+        this.xPos = 450;
+        this.yPos = 10;
     }
 }
 
 public class Object03: BuildingObjects {
     public Object03() {
-        this.itemName = "That rusty rail";
+        this.itemName = "Janitor Adam’s tool shack";
 
         this.itemCosts = 1080;
         this.buildingTime = 7;
+
+        this.xPos = 300;
+        this.yPos = 10;
     }
 }
 
 public class Object04: BuildingObjects {
     public Object04() {
-        this.itemName = "Manu’s sports bar";
+        this.itemName = "The kick-off Kicker";
 
         this.itemCosts = 1260;
         this.buildingTime = 9;
+
+        this.xPos = -670;
+        this.yPos = 10;
     }
 }
 
 public class Object05: BuildingObjects {
     public Object05() {
-        this.itemName = "Casa del Manu Jr.";
+        this.itemName = "St. Manu's fountain";
 
         this.itemCosts = 2160;
         this.buildingTime = 12;
+
+        this.xPos = -180;
+        this.yPos = 10;
     }
 }
 
 public class Object06: BuildingObjects {
     public Object06() {
-        this.itemName = "St. Johns high school";
+        this.itemName = "Principal Klaus’ photo studio";
 
         this.itemCosts = 4320;
         this.buildingTime = 15;
+
+        this.xPos = 170;
+        this.yPos = 10;
     }
 }
 
 public class Object07: BuildingObjects {
     public Object07() {
-        this.itemName = "Janitor Adam’s tool shack";
+        this.itemName = "The renewed roman tower";
 
         this.itemCosts = 5580;
         this.buildingTime = 19;
+
+        this.xPos = -310;
+        this.yPos = 10;
     }
 }
 
 public class Object08: BuildingObjects {
     public Object08() {
-        this.itemName = "Principal Klaus’ photo studio";
+        this.itemName = "Plumbing and Heating Inc.";
 
         this.itemCosts = 7020;
         this.buildingTime = 23;
+
+        this.xPos = 630;
+        this.yPos = 10;
     }
 }
 
@@ -99,6 +129,9 @@ public class Object09: BuildingObjects {
 
         this.itemCosts = 9180;
         this.buildingTime = 28;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -108,6 +141,9 @@ public class Object10: BuildingObjects {
 
         this.itemCosts = 13500;
         this.buildingTime = 33;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -117,6 +153,9 @@ public class Object11: BuildingObjects {
 
         this.itemCosts = 19080;
         this.buildingTime = 39;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -126,6 +165,9 @@ public class Object12: BuildingObjects {
 
         this.itemCosts = 26100;
         this.buildingTime = 45;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -135,6 +177,9 @@ public class Object13: BuildingObjects {
 
         this.itemCosts = 35280;
         this.buildingTime = 52;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -144,6 +189,9 @@ public class Object14: BuildingObjects {
 
         this.itemCosts = 48780;
         this.buildingTime = 59;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -153,6 +201,9 @@ public class Object15: BuildingObjects {
 
         this.itemCosts = 67860;
         this.buildingTime = 67;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -162,6 +213,9 @@ public class Object16: BuildingObjects {
 
         this.itemCosts = 93960;
         this.buildingTime = 75;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -171,6 +225,9 @@ public class Object17: BuildingObjects {
 
         this.itemCosts = 192240;
         this.buildingTime = 84;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -180,6 +237,9 @@ public class Object18: BuildingObjects {
 
         this.itemCosts = 241020;
         this.buildingTime = 93;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -189,6 +249,9 @@ public class Object19: BuildingObjects {
 
         this.itemCosts = 308880;
         this.buildingTime = 103;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -198,6 +261,9 @@ public class Object20: BuildingObjects {
 
         this.itemCosts = 402840;
         this.buildingTime = 113;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -207,6 +273,9 @@ public class Object21: BuildingObjects {
 
         this.itemCosts = 595080;
         this.buildingTime = 124;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -216,6 +285,9 @@ public class Object22: BuildingObjects {
 
         this.itemCosts = 836100;
         this.buildingTime = 135;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
 
@@ -225,5 +297,8 @@ public class Object23: BuildingObjects {
 
         this.itemCosts = 1144980;
         this.buildingTime = 147;
+
+        this.xPos = 500;
+        this.yPos = 10;
     }
 }
