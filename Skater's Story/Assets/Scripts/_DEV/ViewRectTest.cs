@@ -7,6 +7,6 @@ public class ViewRectTest : MonoBehaviour {
     public Camera PlayerCam;
     private Rect camRect;
 
-    private float posY = 0;
+    // private float posY = 0;
 
 }

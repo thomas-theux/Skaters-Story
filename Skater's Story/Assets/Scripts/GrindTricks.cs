@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrindTricks: MonoBehaviour {
+public class GrindTricks : MonoBehaviour {
     public string trickName;
     public int respectGain;
     public int respectIncrease;

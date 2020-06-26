@@ -93,8 +93,8 @@ public class BuildingManager : MonoBehaviour {
 
             BuildingElementScript.ItemID = i;
 
-            newBuildingElement.transform.parent = ElementsContainer.transform;
-            BuildingElementScript.BuildingObjectGO.transform.parent = ObjectsContainer.transform;
+            newBuildingElement.transform.SetParent(ElementsContainer.transform);
+            BuildingElementScript.BuildingObjectGO.transform.SetParent(ObjectsContainer.transform);
 
             if (i < 10) {
                 newBuildingElement.name = "BuildingElement" + "0" + i;
@@ -132,6 +132,7 @@ public class BuildingManager : MonoBehaviour {
         elementsContainerStartPosX = ElementsContainer.transform.position.x;
 
         DisplayBuildPercentage();
+        DisplayBuildingCursor();
     }
 
 
@@ -161,6 +162,7 @@ public class BuildingManager : MonoBehaviour {
                 hasNavigated = true;
             
                 rebuildIndex--;
+                AudioManager.instance.Play("UI Navigate");
 
                 // if (rebuildIndex < 0) {
                 //     rebuildIndex = MaxBuildingElements - 1;
@@ -181,6 +183,7 @@ public class BuildingManager : MonoBehaviour {
                 hasNavigated = true;
             
                 rebuildIndex++;
+                AudioManager.instance.Play("UI Navigate");
 
                 // if (rebuildIndex > MaxBuildingElements - 1) {
                 //     rebuildIndex = 0;
@@ -242,6 +245,8 @@ public class BuildingManager : MonoBehaviour {
         if (XButton) {
             if (BuildingElementsScriptArr[rebuildIndex].ElementStatus == 1) {
                     // Build element
+                    AudioManager.instance.Play("UI Build");
+
                     CharacterSheetScript.MoneyCount -= BuildingObjectsClassArr[rebuildIndex].itemCosts;
                     CharacterSheetScript.UpdateMoneyCount();
 
@@ -252,27 +257,32 @@ public class BuildingManager : MonoBehaviour {
             } else if (BuildingElementsScriptArr[rebuildIndex].ElementStatus == 0) {
                 // Missing resources
                 print("Missing resources!");
+                AudioManager.instance.Play("UI Error");
             } else if (BuildingElementsScriptArr[rebuildIndex].ElementStatus == 2) {
                 // In progress
                 print("in progress");
+                AudioManager.instance.Play("UI Error");
             } else if (BuildingElementsScriptArr[rebuildIndex].ElementStatus == 3) {
                 // Already built
                 print("Already built!");
+                AudioManager.instance.Play("UI Error");
             }
         }
     }
 
 
     private IEnumerator BuildingInProgress(int elementIndex, float buildingTime) {
+        BuildingElementsScriptArr[elementIndex].IsBuilding = true;
+
         yield return new WaitForSeconds(buildingTime);
 
-        print("Built!");
+        // print("Built!");
 
         RebuiltElementsArr[elementIndex] = true;
         RebuiltElementsCount++;
         
-        BuildingElementsScriptArr[elementIndex].ElementStatus = 3;
-        BuildingElementsScriptArr[elementIndex].DisplayElementStatus();
+        // BuildingElementsScriptArr[elementIndex].ElementStatus = 3;
+        // BuildingElementsScriptArr[elementIndex].DisplayElementStatus();
 
         DisplayBuildPercentage();
     }

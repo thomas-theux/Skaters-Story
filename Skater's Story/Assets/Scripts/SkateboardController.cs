@@ -338,6 +338,8 @@ public class SkateboardController : MonoBehaviour {
 
     private void TriggerMenu() {
         if (OptionsButton) {
+            AudioManager.instance.Play("UI Menu");
+
             CharacterSheetScript.MenuOpen = !CharacterSheetScript.MenuOpen;
 
             MenuUI.SetActive(CharacterSheetScript.MenuOpen);

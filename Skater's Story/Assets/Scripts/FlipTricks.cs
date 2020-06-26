@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlipTricks: MonoBehaviour {
+public class FlipTricks : MonoBehaviour {
     public string trickName;
     public int respectGain;
 

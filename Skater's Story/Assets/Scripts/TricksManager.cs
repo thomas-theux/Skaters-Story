@@ -52,20 +52,20 @@ public class TricksManager : MonoBehaviour {
     private void Awake() {
         //////////////////////////////////////////////////////////////////////////////////////
 
-        FlipTricksLeftArr.Add(new Kickflip());
-        FlipTricksLeftArr.Add(new DoubleKickflip());
+        FlipTricksLeftArr.Add(gameObject.AddComponent<Kickflip>());
+        FlipTricksLeftArr.Add(gameObject.AddComponent<DoubleKickflip>());
 
-        FlipTricksUpArr.Add(new ThreeSixtyFlip());
-        FlipTricksUpArr.Add(new SevenTwentyFlip());
+        FlipTricksUpArr.Add(gameObject.AddComponent<ThreeSixtyFlip>());
+        FlipTricksUpArr.Add(gameObject.AddComponent<SevenTwentyFlip>());
 
-        FlipTricksRightArr.Add(new Impossible());
-        FlipTricksRightArr.Add(new ImpossibleThreeSixty());
+        FlipTricksRightArr.Add(gameObject.AddComponent<Impossible>());
+        FlipTricksRightArr.Add(gameObject.AddComponent<ImpossibleThreeSixty>());
 
-        FlipTricksDownArr.Add(new Hardflip());
-        FlipTricksDownArr.Add(new ThreeSixtyHardflip());
+        FlipTricksDownArr.Add(gameObject.AddComponent<Hardflip>());
+        FlipTricksDownArr.Add(gameObject.AddComponent<ThreeSixtyHardflip>());
 
-        FlipTricksNoDirArr.Add(new PopShoveIt());
-        FlipTricksNoDirArr.Add(new ThreeSixtyShoveIt());
+        FlipTricksNoDirArr.Add(gameObject.AddComponent<PopShoveIt>());
+        FlipTricksNoDirArr.Add(gameObject.AddComponent<ThreeSixtyShoveIt>());
 
         FlipTricksArr.Add(FlipTricksLeftArr);
         FlipTricksArr.Add(FlipTricksUpArr);
@@ -75,20 +75,20 @@ public class TricksManager : MonoBehaviour {
 
         //////////////////////////////////////////////////////////////////////////////////////
 
-        GrindTricksLeftArr.Add(new FiveOGrind());
-        GrindTricksLeftArr.Add(new Bluntslide());
+        GrindTricksLeftArr.Add(gameObject.AddComponent<FiveOGrind>());
+        GrindTricksLeftArr.Add(gameObject.AddComponent<Bluntslide>());
         
-        GrindTricksUpArr.Add(new Boardslide());
-        GrindTricksUpArr.Add(new Darkslide());
+        GrindTricksUpArr.Add(gameObject.AddComponent<Boardslide>());
+        GrindTricksUpArr.Add(gameObject.AddComponent<Darkslide>());
 
-        GrindTricksRightArr.Add(new Nosegrind());
-        GrindTricksRightArr.Add(new Nosebluntslide());
+        GrindTricksRightArr.Add(gameObject.AddComponent<Nosegrind>());
+        GrindTricksRightArr.Add(gameObject.AddComponent<Nosebluntslide>());
 
-        GrindTricksDownArr.Add(new Tailslide());
-        GrindTricksDownArr.Add(new Feeble());
+        GrindTricksDownArr.Add(gameObject.AddComponent<Tailslide>());
+        GrindTricksDownArr.Add(gameObject.AddComponent<Feeble>());
         
-        GrindTricksNoDirArr.Add(new FiftyFifty());
-        GrindTricksNoDirArr.Add(new Overcrook());
+        GrindTricksNoDirArr.Add(gameObject.AddComponent<FiftyFifty>());
+        GrindTricksNoDirArr.Add(gameObject.AddComponent<Overcrook>());
 
         GrindTricksArr.Add(GrindTricksLeftArr);
         GrindTricksArr.Add(GrindTricksUpArr);
@@ -98,13 +98,13 @@ public class TricksManager : MonoBehaviour {
 
         //////////////////////////////////////////////////////////////////////////////////////
 
-        ManualTricksLeftArr.Add(new Casper());
+        ManualTricksLeftArr.Add(gameObject.AddComponent<Casper>());
 
-        ManualTricksUpArr.Add(new Manual());
+        ManualTricksUpArr.Add(gameObject.AddComponent<Manual>());
 
-        ManualTricksRightArr.Add(new Primo());
+        ManualTricksRightArr.Add(gameObject.AddComponent<Primo>());
 
-        ManualTricksDownArr.Add(new NoseManual());
+        ManualTricksDownArr.Add(gameObject.AddComponent<NoseManual>());
 
         ManualTricksArr.Add(ManualTricksLeftArr);
         ManualTricksArr.Add(ManualTricksUpArr);

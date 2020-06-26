@@ -14,13 +14,25 @@ public class BuildingElement : MonoBehaviour {
 
     public string ItemName;
     public int ItemCosts;
+    public float BuildingTime;
+
+    private float buildingTimeRemaining;
+    // private float buildTimerDelay = 0.5f;
+    private float buildTimerDelay = 0f;
 
     public float XPos;
     public float YPos;
 
-    public TMP_Text ItemNameText;
-    public TMP_Text ItemCostsText;
+    public TMP_Text ItemNameTXT;
+    public TMP_Text ItemCostsTXT;
+    public TMP_Text BuildingTimeTXT;
 
+    public GameObject BuildTimerGO;
+    public Image BuildTimerIMG;
+
+    private float timerFloatingHeight = 20f;
+
+    public bool IsBuilding = false;
     public bool IsSelected = false;
 
     private Image BuildingObjectOutlineIMG;
@@ -30,10 +42,13 @@ public class BuildingElement : MonoBehaviour {
     public int ElementStatus = 0;
 
 
-    private void Start() {
+    private void Awake() {
         BuildingObjectOutlineIMG = BuildingObjectGO.GetComponent<Image>();
         BuildingObjectFillIMG = BuildingObjectGO.transform.GetChild(0).GetComponent<Image>();
+    }
 
+
+    private void Start() {
         // Instantiate sprites for objects
         BuildingObjectOutlineIMG.sprite = Resources.Load<Sprite>("_DEV/Building/Outline/" + "Object0" + ItemID + "-Outline");
         BuildingObjectFillIMG.sprite = Resources.Load<Sprite>("_DEV/Building/Fill/" + "Object0" + ItemID + "-Fill");
@@ -56,17 +71,37 @@ public class BuildingElement : MonoBehaviour {
 
         BuildingObjectOutlineIMG.rectTransform.anchoredPosition = new Vector2(XPos, YPos);
 
+        BuildTimerGO.GetComponent<RectTransform>().anchoredPosition = new Vector2(
+            0,
+            BuildingObjectOutlineIMG.sprite.rect.height + timerFloatingHeight
+        );
+
         // print(BuildingObjectGO.GetComponent<Image>().rectTransform.sizeDelta.x);
         // print(BuildingObjectGO.GetComponent<Image>().rectTransform.sizeDelta.y);
 
         ItemName = BuildingManager.BuildingObjectsClassArr[ItemID].itemName;
         ItemCosts = BuildingManager.BuildingObjectsClassArr[ItemID].itemCosts;
+        BuildingTime = BuildingManager.BuildingObjectsClassArr[ItemID].buildingTime;
 
-        ItemNameText.text = "" + ItemName;
-        ItemCostsText.text = "$" + ItemCosts.ToString("N0");
+        buildingTimeRemaining = BuildingTime;
+
+        ItemNameTXT.text = "" + ItemName;
+        ItemCostsTXT.text = "$" + ItemCosts.ToString("N0");
+
+        int minutes = Mathf.FloorToInt(BuildingTime / 60);
+        int seconds = Mathf.FloorToInt(BuildingTime % 60);
+
+        if (seconds < 10) BuildingTimeTXT.text = minutes + ":" + "0" + seconds;
+        else BuildingTimeTXT.text = minutes + ":" + seconds;
 
         CheckForMoney();
         DisplayElementStatus();
+        DisplayObjectStatus();
+    }
+
+
+    private void Update() {
+        BuildingInProgress();
     }
 
 
@@ -75,9 +110,11 @@ public class BuildingElement : MonoBehaviour {
             if (CharacterSheetScript.MoneyCount >= ItemCosts) {
                 ElementStatus = 1;
                 DisplayElementStatus();
+                DisplayObjectStatus();
             } else {
                 ElementStatus = 0;
                 DisplayElementStatus();
+                DisplayObjectStatus();
             }
         }
     }
@@ -86,22 +123,22 @@ public class BuildingElement : MonoBehaviour {
     public void DisplayElementStatus() {
         switch (ElementStatus) {
             case 0:
-                ItemNameText.color = ColorManager.KeyWhite40;
-                ItemCostsText.color = ColorManager.KeyWhite40;
+                ItemNameTXT.color = ColorManager.KeyWhite40;
+                ItemCostsTXT.color = ColorManager.KeyWhite40;
                 break;
             case 1:
-                ItemNameText.color = ColorManager.KeyWhite100;
-                ItemCostsText.color = ColorManager.KeyWhite100;
+                ItemNameTXT.color = ColorManager.KeyWhite100;
+                ItemCostsTXT.color = ColorManager.KeyWhite100;
                 break;
             case 2:
-                ItemNameText.color = ColorManager.KeyWhite100;
-                ItemCostsText.color = ColorManager.KeyWhite100;
-                ItemCostsText.text = "in progress";
+                ItemNameTXT.color = ColorManager.KeyWhite100;
+                ItemCostsTXT.color = ColorManager.KeyWhite100;
+                ItemCostsTXT.text = "in progress";
                 break;
             case 3:
-                ItemNameText.color = ColorManager.KeyWhite100;
-                ItemCostsText.color = ColorManager.KeyWhite100;
-                ItemCostsText.text = "done";
+                ItemNameTXT.color = ColorManager.KeyWhite100;
+                ItemCostsTXT.color = ColorManager.KeyWhite100;
+                ItemCostsTXT.text = "done";
                 break;
         }        
     }
@@ -112,19 +149,33 @@ public class BuildingElement : MonoBehaviour {
             switch (ElementStatus) {
                 case 0:
                     BuildingObjectOutlineIMG.color = ColorManager.KeyWhite40;
+                    // BuildingObjectOutlineIMG.color = ColorManager.KeyWhite0;
                     BuildingObjectFillIMG.color = ColorManager.KeyWhite0;
+
+                    BuildTimerIMG.enabled = false;
+                    BuildTimerGO.transform.GetChild(0).gameObject.SetActive(false);
                     break;
                 case 1:
                     BuildingObjectOutlineIMG.color = ColorManager.KeyWhite100;
+                    // BuildingObjectOutlineIMG.color = ColorManager.KeyWhite0;
                     BuildingObjectFillIMG.color = ColorManager.KeyWhite0;
+
+                    BuildTimerIMG.enabled = false;
+                    BuildTimerGO.transform.GetChild(0).gameObject.SetActive(false);
                     break;
                 case 2:
                     BuildingObjectOutlineIMG.color = ColorManager.KeyWhite100;
-                    BuildingObjectOutlineIMG.color = ColorManager.KeyWhite40;
+                    BuildingObjectFillIMG.color = ColorManager.KeyWhite40;
+                    
+                    BuildTimerIMG.enabled = false;
+                    BuildTimerGO.transform.GetChild(0).gameObject.SetActive(true);
                     break;
                 case 3:
                     BuildingObjectOutlineIMG.color = ColorManager.KeyWhite100;
                     BuildingObjectFillIMG.color = ColorManager.KeyWhite80;
+                    
+                    BuildTimerIMG.enabled = false;
+                    BuildTimerGO.transform.GetChild(0).gameObject.SetActive(false);
                     break;
             }
         } else {
@@ -132,20 +183,75 @@ public class BuildingElement : MonoBehaviour {
                 case 0:
                     BuildingObjectOutlineIMG.color = ColorManager.KeyOrange40;
                     BuildingObjectFillIMG.color = ColorManager.KeyOrange16;
+
+                    BuildTimerIMG.enabled = true;
+                    BuildTimerGO.transform.GetChild(0).gameObject.SetActive(true);
                     break;
                 case 1:
                     BuildingObjectOutlineIMG.color = ColorManager.KeyOrange100;
                     BuildingObjectFillIMG.color = ColorManager.KeyOrange40;
+
+                    BuildTimerIMG.enabled = true;
+                    BuildTimerGO.transform.GetChild(0).gameObject.SetActive(true);
                     break;
                 case 2:
                     BuildingObjectOutlineIMG.color = ColorManager.KeyOrange100;
-                    BuildingObjectOutlineIMG.color = ColorManager.KeyOrange40;
+                    BuildingObjectFillIMG.color = ColorManager.KeyOrange40;
+
+                    BuildTimerIMG.enabled = true;
+                    BuildTimerGO.transform.GetChild(0).gameObject.SetActive(true);
                     break;
                 case 3:
                     BuildingObjectOutlineIMG.color = ColorManager.KeyOrange100;
                     BuildingObjectFillIMG.color = ColorManager.KeyOrange80;
+
+                    BuildTimerIMG.enabled = false;
+                    BuildTimerGO.transform.GetChild(0).gameObject.SetActive(false);
                     break;
             }
+        }
+    }
+
+
+    private void BuildingInProgress() {
+        if (IsBuilding) {
+
+            // Short delay before the timer starts running to improve the PX
+            if (buildTimerDelay > 0) {
+                buildTimerDelay -= Time.deltaTime;
+            } else {
+                buildingTimeRemaining -= Time.deltaTime;
+
+                // int minutes = Mathf.FloorToInt(buildingTimeRemaining / 60);
+                // int seconds = Mathf.FloorToInt(buildingTimeRemaining % 60);
+
+                // if (seconds < 10) BuildingTimeTXT.text = minutes + ":" + "0" + seconds;
+                // else BuildingTimeTXT.text = minutes + ":" + seconds;
+
+                int minutes = Mathf.FloorToInt(buildingTimeRemaining / 60);
+                int seconds = Mathf.CeilToInt(buildingTimeRemaining % 60);
+
+                if (seconds < 10) BuildingTimeTXT.text = minutes + ":" + "0" + seconds;
+                else {
+                    if (seconds == 60) BuildingTimeTXT.text = (minutes + 1) + ":" + "0" + "0";
+                    else BuildingTimeTXT.text = minutes + ":" + seconds;
+                }
+
+                float fillProgress = 1 - (buildingTimeRemaining / BuildingTime);
+                BuildingObjectFillIMG.fillAmount = fillProgress;
+
+                if (buildingTimeRemaining <= 0) {
+                    print("Built!");
+                    AudioManager.instance.Play("UI Success");
+
+                    ElementStatus = 3;
+                    DisplayElementStatus();
+                    DisplayObjectStatus();
+
+                    IsBuilding = false;
+                }
+            }
+
         }
     }
 
