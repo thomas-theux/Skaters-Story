@@ -29,13 +29,13 @@ public class Collectibles : MonoBehaviour {
 
 
     private void Rotating() {
-        transform.Rotate(new Vector3(0, Time.deltaTime *rotateSpeed, 0));
+        transform.Rotate(new Vector3(0, Time.unscaledDeltaTime * rotateSpeed, 0));
     }
 
 
     private void Floating() {
         if (!CollectiblesMagnetScript.PlayerDetected) {
-            float yPos = Mathf.Sin(Time.time * moveSpeed);
+            float yPos = Mathf.Sin(Time.unscaledTime * moveSpeed);
             transform.position = startPosition + new Vector3(0, yPos / moveHeight, 0);
         }
     }

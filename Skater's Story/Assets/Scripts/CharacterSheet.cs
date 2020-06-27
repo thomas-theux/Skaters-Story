@@ -108,7 +108,7 @@ public class CharacterSheet : MonoBehaviour {
 
 
     public void UpdateMoneyCount() {
-        MoneyCountText.text = "$" + MoneyCount;
+        MoneyCountText.text = "$" + MoneyCount.ToString("N0");
 
         for (int i = 0; i < BuildingManager.BuildingElementsScriptArr.Count; i++) {
             BuildingManager.BuildingElementsScriptArr[i].CheckForMoney();

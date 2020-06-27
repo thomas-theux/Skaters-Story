@@ -218,9 +218,9 @@ public class BuildingElement : MonoBehaviour {
 
             // Short delay before the timer starts running to improve the PX
             if (buildTimerDelay > 0) {
-                buildTimerDelay -= Time.deltaTime;
+                buildTimerDelay -= Time.unscaledDeltaTime;
             } else {
-                buildingTimeRemaining -= Time.deltaTime;
+                buildingTimeRemaining -= Time.unscaledDeltaTime;
 
                 // int minutes = Mathf.FloorToInt(buildingTimeRemaining / 60);
                 // int seconds = Mathf.FloorToInt(buildingTimeRemaining % 60);
@@ -241,7 +241,6 @@ public class BuildingElement : MonoBehaviour {
                 BuildingObjectFillIMG.fillAmount = fillProgress;
 
                 if (buildingTimeRemaining <= 0) {
-                    print("Built!");
                     AudioManager.instance.Play("UI Success");
 
                     ElementStatus = 3;

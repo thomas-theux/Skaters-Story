@@ -18,6 +18,7 @@ public class SkateboardController : MonoBehaviour {
     public SphereCollider BoardCollider;
 
     public GameObject MenuUI;
+    // public Canvas MenuUI;
 
     public int Direction = 1;
     private bool directionSwitchR = false;
@@ -339,10 +340,21 @@ public class SkateboardController : MonoBehaviour {
     private void TriggerMenu() {
         if (OptionsButton) {
             AudioManager.instance.Play("UI Menu");
+            // AudioSource.ignoreListenerPause = true;
+            // AudioManager.instance.GetComponent<AudioSource>().ignoreListenerPause = true;
 
             CharacterSheetScript.MenuOpen = !CharacterSheetScript.MenuOpen;
 
+            if (CharacterSheetScript.MenuOpen) {
+                Time.timeScale = 0f;
+                AudioListener.pause = true;
+            } else {
+                Time.timeScale = 1;
+                AudioListener.pause = false;
+            }
+
             MenuUI.SetActive(CharacterSheetScript.MenuOpen);
+            // MenuUI.enabled = CharacterSheetScript.MenuOpen;
         }
     }
 

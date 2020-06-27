@@ -274,7 +274,7 @@ public class BuildingManager : MonoBehaviour {
     private IEnumerator BuildingInProgress(int elementIndex, float buildingTime) {
         BuildingElementsScriptArr[elementIndex].IsBuilding = true;
 
-        yield return new WaitForSeconds(buildingTime);
+        yield return new WaitForSecondsRealtime(buildingTime);
 
         // print("Built!");
 

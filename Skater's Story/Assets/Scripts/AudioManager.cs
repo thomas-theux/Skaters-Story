@@ -28,6 +28,17 @@ public class AudioManager : MonoBehaviour {
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
+
+            switch (s.name) {
+                case "UI Navigate":
+                case "UI Select":
+                case "UI Error":
+                case "UI Success":
+                case "UI Menu":
+                case "UI Build":
+                    s.source.ignoreListenerPause = true;
+                    break;
+            }
         }
     }
 

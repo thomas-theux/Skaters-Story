@@ -122,3 +122,39 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: UI Navigate
+    clip: {fileID: 8300000, guid: a3ad8d556b9f54e02928a3803b5de7e4, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: UI Select
+    clip: {fileID: 8300000, guid: 9fe39aa94293f439da1e62d4d7131627, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: UI Error
+    clip: {fileID: 8300000, guid: 50759eadae2a9476a8cadae35d604239, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: UI Success
+    clip: {fileID: 8300000, guid: 36afde8a49d894ae48e6fc66888e9910, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: UI Menu
+    clip: {fileID: 8300000, guid: 079970fe1b88442148661b35cc5397fe, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: UI Build
+    clip: {fileID: 8300000, guid: 9b6434bf7a3b34787b6f745c6c75eb34, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
