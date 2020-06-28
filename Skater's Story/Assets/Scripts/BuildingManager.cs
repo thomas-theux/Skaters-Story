@@ -129,7 +129,7 @@ public class BuildingManager : MonoBehaviour {
             RebuiltElementsArr.Add(false);
         }
 
-        elementsContainerStartPosX = ElementsContainer.transform.position.x;
+        elementsContainerStartPosX = ElementsContainer.transform.localPosition.x;
 
         DisplayBuildPercentage();
         DisplayBuildingCursor();
@@ -276,8 +276,6 @@ public class BuildingManager : MonoBehaviour {
 
         yield return new WaitForSecondsRealtime(buildingTime);
 
-        // print("Built!");
-
         RebuiltElementsArr[elementIndex] = true;
         RebuiltElementsCount++;
         
@@ -294,8 +292,8 @@ public class BuildingManager : MonoBehaviour {
     }
 
 
-    private void DisplayObjectsStatus() {
-        for (int i = 0; i < BuildingObjectsArr.Count; i++) {}
-    }
+    // private void DisplayObjectsStatus() {
+    //     for (int i = 0; i < BuildingObjectsArr.Count; i++) {}
+    // }
 
 }

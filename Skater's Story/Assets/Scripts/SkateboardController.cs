@@ -178,7 +178,7 @@ public class SkateboardController : MonoBehaviour {
     // New controls: Shoulder buttons to roll left or right
     private void NewControls() {
         if (!TricksHandlerScript.IsBailing) {
-            horizontalAxis = player.GetAxis("Horizontal Shoulder");
+            horizontalAxis = player.GetAxis("Horizontal Shoulder 2");
             XButtonUp = player.GetButtonDown("X");
 
             if (IsGrounded) {
