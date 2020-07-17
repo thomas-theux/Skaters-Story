@@ -10,7 +10,7 @@ public class CharacterSheet : MonoBehaviour {
 
     public Image RespectBar;
     public TMP_Text CurrentLevelText;
-    public TMP_Text CurrentRespectText;
+    // public TMP_Text CurrentRespectText;
 
     public TMP_Text MoneyCountText;
     public int MoneyCount = 100;
@@ -55,7 +55,7 @@ public class CharacterSheet : MonoBehaviour {
 
             CheckForLevelUp();
 
-            UpdateRespectText();
+            // UpdateRespectText();
             UpdateRespectBar();
         }
     }
@@ -75,9 +75,9 @@ public class CharacterSheet : MonoBehaviour {
     }
 
 
-    private void UpdateRespectText() {
-        CurrentRespectText.text = Mathf.Ceil(CurrentRespectValue) + " respect";
-    }
+    // private void UpdateRespectText() {
+    //     CurrentRespectText.text = Mathf.Ceil(CurrentRespectValue) + " respect";
+    // }
 
 
     private void UpdateRespectBar() {

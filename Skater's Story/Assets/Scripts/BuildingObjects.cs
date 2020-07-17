@@ -22,7 +22,7 @@ public class Object00: BuildingObjects {
         this.itemCosts = 360;
         this.buildingTime = 3;
 
-        this.xPos = -670;
+        this.xPos = -10;
         this.yPos = 10;
     }
 }
@@ -46,19 +46,19 @@ public class Object02: BuildingObjects {
         this.itemCosts = 720;
         this.buildingTime = 5;
 
-        this.xPos = -310;
+        this.xPos = 450;
         this.yPos = 10;
     }
 }
 
 public class Object03: BuildingObjects {
     public Object03() {
-        this.itemName = "Janitor Adam’s tool shack";
+        this.itemName = "Janitor Adam’s tool shed";
 
         this.itemCosts = 1080;
         this.buildingTime = 7;
 
-        this.xPos = -180;
+        this.xPos = 300;
         this.yPos = 10;
     }
 }
@@ -70,7 +70,7 @@ public class Object04: BuildingObjects {
         this.itemCosts = 1260;
         this.buildingTime = 9;
 
-        this.xPos = -10;
+        this.xPos = -670;
         this.yPos = 10;
     }
 }
@@ -82,7 +82,7 @@ public class Object05: BuildingObjects {
         this.itemCosts = 2160;
         this.buildingTime = 12;
 
-        this.xPos = 170;
+        this.xPos = -180;
         this.yPos = 10;
     }
 }
@@ -94,7 +94,7 @@ public class Object06: BuildingObjects {
         this.itemCosts = 4320;
         this.buildingTime = 15;
 
-        this.xPos = 300;
+        this.xPos = 170;
         this.yPos = 10;
     }
 }
@@ -106,7 +106,7 @@ public class Object07: BuildingObjects {
         this.itemCosts = 5580;
         this.buildingTime = 19;
 
-        this.xPos = 450;
+        this.xPos = -310;
         this.yPos = 10;
     }
 }

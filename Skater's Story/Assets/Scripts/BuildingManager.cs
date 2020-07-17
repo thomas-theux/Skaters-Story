@@ -291,9 +291,4 @@ public class BuildingManager : MonoBehaviour {
         PercentageText.text = RebuiltElementsCount + "/" + MaxBuildingElements;
     }
 
-
-    // private void DisplayObjectsStatus() {
-    //     for (int i = 0; i < BuildingObjectsArr.Count; i++) {}
-    // }
-
 }

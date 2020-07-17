@@ -136,8 +136,10 @@ public class BuildingElement : MonoBehaviour {
                 ItemCostsTXT.text = "in progress";
                 break;
             case 3:
-                ItemNameTXT.color = ColorManager.KeyWhite100;
-                ItemCostsTXT.color = ColorManager.KeyWhite100;
+                // ItemNameTXT.color = ColorManager.KeyWhite100;
+                // ItemCostsTXT.color = ColorManager.KeyWhite100;
+                ItemNameTXT.color = ColorManager.KeyWhite40;
+                ItemCostsTXT.color = ColorManager.KeyWhite40;
                 ItemCostsTXT.text = "done";
                 break;
         }        
@@ -148,16 +150,16 @@ public class BuildingElement : MonoBehaviour {
         if (!IsSelected) {
             switch (ElementStatus) {
                 case 0:
-                    BuildingObjectOutlineIMG.color = ColorManager.KeyWhite40;
-                    // BuildingObjectOutlineIMG.color = ColorManager.KeyWhite0;
+                    // BuildingObjectOutlineIMG.color = ColorManager.KeyWhite40;
+                    BuildingObjectOutlineIMG.color = ColorManager.KeyWhite0;
                     BuildingObjectFillIMG.color = ColorManager.KeyWhite0;
 
                     BuildTimerIMG.enabled = false;
                     BuildTimerGO.transform.GetChild(0).gameObject.SetActive(false);
                     break;
                 case 1:
-                    BuildingObjectOutlineIMG.color = ColorManager.KeyWhite100;
-                    // BuildingObjectOutlineIMG.color = ColorManager.KeyWhite0;
+                    // BuildingObjectOutlineIMG.color = ColorManager.KeyWhite100;
+                    BuildingObjectOutlineIMG.color = ColorManager.KeyWhite0;
                     BuildingObjectFillIMG.color = ColorManager.KeyWhite0;
 
                     BuildTimerIMG.enabled = false;
@@ -221,12 +223,6 @@ public class BuildingElement : MonoBehaviour {
                 buildTimerDelay -= Time.unscaledDeltaTime;
             } else {
                 buildingTimeRemaining -= Time.unscaledDeltaTime;
-
-                // int minutes = Mathf.FloorToInt(buildingTimeRemaining / 60);
-                // int seconds = Mathf.FloorToInt(buildingTimeRemaining % 60);
-
-                // if (seconds < 10) BuildingTimeTXT.text = minutes + ":" + "0" + seconds;
-                // else BuildingTimeTXT.text = minutes + ":" + seconds;
 
                 int minutes = Mathf.FloorToInt(buildingTimeRemaining / 60);
                 int seconds = Mathf.CeilToInt(buildingTimeRemaining % 60);
